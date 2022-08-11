@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class HelpSet(models.Model):
     """A set of lexical helps."""
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     author = models.ForeignKey(User, models.SET_NULL, null=True)
     date_created = models.DateField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True) # NOTE: Set when altering Lexeme
@@ -17,6 +17,9 @@ class Root(models.Model):
     """A lexical root. Used for grouping together related lexemes."""
     helpset = models.ForeignKey(HelpSet, models.CASCADE)
     text = models.CharField(max_length=100)
+
+    class Meta:
+        ordering = ["text"]
 
     def __str__(self) -> str:
         return f"{self.text} ({self.helpset})"
@@ -31,8 +34,11 @@ class Lexeme(models.Model):
     root = models.ForeignKey(Root, models.SET_NULL, null=True, blank=True)
     text = models.CharField(max_length=100)
     help_text = models.TextField(null=True, blank=True)
-    help_image = models.ImageField()
+    help_image = models.ImageField(default="", blank=True)
     words = models.ManyToManyField("Word", related_name="lexemes", through="Link")
+
+    class Meta:
+        ordering = ["text"]
 
     def __str__(self) -> str:
         return f"{self.text} ({self.helpset})"
@@ -53,6 +59,9 @@ class Word(models.Model):
             return lex.helpset
         return None
 
+    class Meta:
+        ordering = ["text"]
+
     def __str__(self) -> str:
         return f"{self.text} ({self.helpset})"
 
@@ -63,7 +72,7 @@ class Link(models.Model):
     """
     lexeme = models.ForeignKey(Lexeme, models.CASCADE)
     word = models.ForeignKey(Word, models.CASCADE)
-    parse_data = models.CharField(max_length=200, blank=True, default="")
+    parse_data = models.CharField(max_length=200, blank=True, default="")  
 
     def __str__(self) -> str:
         return f"{self.word.text} -> {self.lexeme.text} ({self.lexeme.helpset})"
