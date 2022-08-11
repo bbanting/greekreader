@@ -33,9 +33,6 @@ class Root(models.Model):
 
 class Lexeme(models.Model):
     """An abstract lexeme."""
-    # NOTE: User should be warned when deleting a lexeme 
-    # that still has linked words. Words that have no other links
-    # should be deleted.
     helpset = models.ForeignKey(HelpSet, models.CASCADE, related_name="lexemes")
     text = models.CharField(max_length=100)
     root = models.ForeignKey(Root, models.SET_NULL, null=True, blank=True)
@@ -51,6 +48,16 @@ class Lexeme(models.Model):
                 name="lexeme_text_unqiue",
             )
         ]
+
+    # NOTE: User should be warned when deleting a lexeme 
+    # that still has linked words. Words that have no other links
+    # should be deleted.
+    def delete(self, *args, **kwargs) -> None:
+        for word in self.words.all():
+            if len(word.lexemes.all()) > 1:
+                continue
+            word.delete()
+        super().delete(*args, **kwargs)
 
     def __str__(self) -> str:
         return f"{self.text} ({self.helpset})"
@@ -78,8 +85,9 @@ class Link(models.Model):
     """A link between a word and the lexeme it is derived from.
     Distinct lexemes may have forms that are morphologically identical.
     """
-    lexeme = models.ForeignKey(Lexeme, models.CASCADE)
-    word = models.ForeignKey(Word, models.CASCADE)
+    # TODO: If a link is deleted, delete the word if it has no other links
+    lexeme = models.ForeignKey(Lexeme, models.CASCADE, related_name="links")
+    word = models.ForeignKey(Word, models.CASCADE, related_name="links")
     parse_data = models.CharField(max_length=200, blank=True, default="")  
 
     @property
