@@ -97,3 +97,10 @@ class Link(models.Model):
 
     def __str__(self) -> str:
         return f"{self.word.text} -> {self.lexeme.text} ({self.helpset})"
+
+
+class Book(models.Model):
+    """A book. Essentially just text but stored in the JSON format 
+    for structure."""
+    name = models.CharField(max_length=100, unique=True)
+    text = models.JSONField()
