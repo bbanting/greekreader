@@ -15,7 +15,7 @@ class HelpSet(models.Model):
 
 class Root(models.Model):
     """A lexical root. Used for grouping together related lexemes."""
-    helpset = models.ForeignKey(HelpSet, models.CASCADE)
+    helpset = models.ForeignKey(HelpSet, models.CASCADE, related_name="roots")
     text = models.CharField(max_length=100)
 
     class Meta:
@@ -33,12 +33,16 @@ class Root(models.Model):
 
 class Lexeme(models.Model):
     """An abstract lexeme."""
+    # NOTE: User should be warned when deleting a lexeme 
+    # that still has links as they will also be deleted.
     helpset = models.ForeignKey(HelpSet, models.CASCADE, related_name="lexemes")
     text = models.CharField(max_length=100)
     root = models.ForeignKey(Root, models.SET_NULL, null=True, blank=True)
     help_text = models.TextField(null=True, blank=True)
     help_image = models.ImageField(default="", blank=True)
-    words = models.ManyToManyField("Word", related_name="lexemes", through="Link")
+
+    def __str__(self) -> str:
+        return f"{self.text} ({self.helpset})"
 
     class Meta:
         ordering = ["text"]
@@ -49,54 +53,28 @@ class Lexeme(models.Model):
             )
         ]
 
-    # NOTE: User should be warned when deleting a lexeme 
-    # that still has linked words. Words that have no other links
-    # should be deleted.
-    def delete(self, *args, **kwargs) -> None:
-        for word in self.words.all():
-            if len(word.lexemes.all()) > 1:
-                continue
-            word.delete()
-        super().delete(*args, **kwargs)
-
-    def __str__(self) -> str:
-        return f"{self.text} ({self.helpset})"
-
-
-class Word(models.Model):
-    """A concrete manifestation of a lexeme."""
-    helpset = models.ForeignKey(HelpSet, models.CASCADE, related_name="words")
-    text = models.CharField(max_length=100)
-
-    class Meta:
-        ordering = ["text"]
-        constraints = [
-            models.UniqueConstraint(
-                fields=["helpset", "text"], 
-                name="word_text_unique",
-            )
-        ]
-
-    def __str__(self) -> str:
-        return f"{self.text} ({self.helpset})"
-
 
 class Link(models.Model):
-    """A link between a word and the lexeme it is derived from.
-    Distinct lexemes may have forms that are morphologically identical.
+    """A link between a concrete word form and the lexeme it is derived from.
+    Distinct lexemes may have forms that are morphologically identical and
+    so multiple links may have the same text but point to different lexemes.
     """
-    # TODO: If a link is deleted, delete the word if it has no other links
+    helpset = models.ForeignKey(HelpSet, models.CASCADE, related_name="links")
+    word = models.CharField(max_length=100)
     lexeme = models.ForeignKey(Lexeme, models.CASCADE, related_name="links")
-    word = models.ForeignKey(Word, models.CASCADE, related_name="links")
-    parse_data = models.CharField(max_length=200, blank=True, default="")  
-
-    @property
-    def helpset(self) -> HelpSet | None:
-        """Retrieve the helpset it belongs to."""
-        return self.lexeme.helpset
+    parse_data = models.CharField(max_length=200, blank=True, default="")
 
     def __str__(self) -> str:
-        return f"{self.word.text} -> {self.lexeme.text} ({self.helpset})"
+        return f"{self.word} -> {self.lexeme.text} ({self.helpset})"
+
+    class Meta:
+        ordering = ["word"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["word", "lexeme"],
+                name="word_lexeme_pair_unique",
+            ),
+        ]
 
 
 class Book(models.Model):
