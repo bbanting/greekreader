@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class HelpSet(models.Model):
@@ -7,7 +8,7 @@ class HelpSet(models.Model):
     name = models.CharField(max_length=100, unique=True)
     author = models.ForeignKey(User, models.SET_NULL, null=True)
     date_created = models.DateField(auto_now_add=True)
-    last_modified = models.DateTimeField(auto_now=True) # NOTE: Set when altering Lexeme
+    last_modified = models.DateTimeField(default=timezone.now)
 
     def __str__(self) -> str:
         return self.name
@@ -18,6 +19,9 @@ class Root(models.Model):
     helpset = models.ForeignKey(HelpSet, models.CASCADE, related_name="roots")
     text = models.CharField(max_length=100)
 
+    def __str__(self) -> str:
+        return f"{self.text} ({self.helpset})"
+
     class Meta:
         ordering = ["text"]
         constraints = [
@@ -26,9 +30,6 @@ class Root(models.Model):
                 name="root_text_unique",
             )
         ]
-
-    def __str__(self) -> str:
-        return f"{self.text} ({self.helpset})"
 
 
 class Lexeme(models.Model):

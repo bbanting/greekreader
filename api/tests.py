@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.db.models import Model
 from django.contrib.auth.models import User
 
-from .models import HelpSet, Lexeme, Word
+from .models import HelpSet, Lexeme, Link, Root
 
 
 def exists(model:Model, pk:Any, pk_field_name:str="pk", manager:str="_default_manager") -> bool:
@@ -13,37 +13,44 @@ def exists(model:Model, pk:Any, pk_field_name:str="pk", manager:str="_default_ma
     return bool(getattr(model, manager).filter(**{pk_field_name: pk}))
 
 
-class LexemeTestCase(TestCase):
+class HelpSetTestCase(TestCase):
     def setUp(self) -> None:
-        user = User.objects.create(username="user", password="badpassword")
-        self.hs = HelpSet.objects.create(name="hs", author=user)
+        user = User.objects.create(username="test", password="pass")
+        self.hs = HelpSet.objects.create(name="name", author=user)
 
-    def test_delete_side_effect_lonely_words_are_deleted_single(self) -> None:
+    def test_last_modified_updated_on_root_save(self) -> None:
+        last_modified = self.hs.last_modified
+        Root.objects.create(helpset=self.hs, text="hello")
+        self.assertGreater(self.hs.last_modified, last_modified)
+
+    def test_last_modified_updated_on_root_delete(self) -> None:
+        root = Root.objects.create(helpset=self.hs, text="hello")
+        last_modified = self.hs.last_modified
+        root.delete()
+        self.assertGreater(self.hs.last_modified, last_modified)
+
+    def test_last_modified_updated_on_lexeme_save(self) -> None:
+        last_modified = self.hs.last_modified
+        Lexeme.objects.create(helpset=self.hs, text="hello")
+        self.assertGreater(self.hs.last_modified, last_modified)
+
+    def test_last_modified_updated_on_lexeme_delete(self) -> None:
         lex = Lexeme.objects.create(helpset=self.hs, text="hello")
-        word1 = Word.objects.create(helpset=self.hs, text="word1")
-        lex.words.add(word1)
+        last_modified = self.hs.last_modified
         lex.delete()
-
-        self.assertEqual(exists(Word, word1.pk), False)
-
-    def test_delete_side_effect_lonely_words_are_deleted_multiple(self) -> None:
+        self.assertGreater(self.hs.last_modified, last_modified)
+  
+    def test_last_modified_updated_on_link_save(self) -> None:
         lex = Lexeme.objects.create(helpset=self.hs, text="hello")
-        word1 = Word.objects.create(helpset=self.hs, text="word1")
-        word2 = Word.objects.create(helpset=self.hs, text="word2")
-        lex.words.add(word1, word2)
-        lex.delete()
+        last_modified = self.hs.last_modified
+        Link.objects.create(helpset=self.hs, word="hey", lexeme=lex)
+        self.assertGreater(self.hs.last_modified, last_modified)
 
-        self.assertEqual(exists(Word, word1.pk), False)
-        self.assertEqual(exists(Word, word2.pk), False)
-        
-    def test_delete_side_effect_valid_word_not_deleted(self) -> None:
-        lex1 = Lexeme.objects.create(helpset=self.hs, text="hello")
-        lex2 = Lexeme.objects.create(helpset=self.hs, text="goodbye")
-        word1 = Word.objects.create(helpset=self.hs, text="word1")
-        word2 = Word.objects.create(helpset=self.hs, text="word2")
-        lex1.words.add(word1, word2)
-        lex2.words.add(word2)
-        lex1.delete()
+    def test_last_modified_updated_on_link_delete(self) -> None:
+        lex = Lexeme.objects.create(helpset=self.hs, text="hello")
+        link = Link.objects.create(helpset=self.hs, word="hey", lexeme=lex)
+        last_modified = self.hs.last_modified
+        link.delete()
+        self.assertGreater(self.hs.last_modified, last_modified)
 
-        self.assertEqual(exists(Word, word1.pk), False)
-        self.assertEqual(exists(Word, word2.pk), True)
+
