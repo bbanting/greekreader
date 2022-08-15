@@ -1,5 +1,4 @@
 """Signals registered here. Imported in the app config."""
-
 from django.db.models.signals import post_save, post_delete
 from django.utils import timezone
 from django.dispatch import receiver

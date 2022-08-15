@@ -5,8 +5,10 @@ name = "pypi"
 
 [packages]
 django = "*"
+djangorestframework = "*"
 
 [dev-packages]
+httpie = "*"
 
 [requires]
 python_version = "3.10"

@@ -14,8 +14,8 @@ class HelpSet(models.Model):
         return self.name
 
     class Meta:
-        # This ordering is for the sake of Book easily resolving helpset order
-        ordering = ["bookhelpsetinstance__order"]
+        # This ordering is for the sake of Book resolving helpset order
+        ordering = ["helpsetassignment__order"]
 
 
 class Root(models.Model):
@@ -23,7 +23,7 @@ class Root(models.Model):
     date_created = models.DateField(auto_now_add=True)
     creator = models.ForeignKey(User, models.SET_NULL, null=True)
     last_modified = models.DateTimeField(auto_now=True)
-    last_modified_by = models.ForeignKey(User, models.SET_NULL, null=True)
+    # last_modified_by = models.ForeignKey(User, models.SET_NULL, null=True)
 
     helpset = models.ForeignKey(HelpSet, models.CASCADE, related_name="roots")
     text = models.CharField(max_length=100)
@@ -48,7 +48,7 @@ class Lexeme(models.Model):
     date_created = models.DateField(auto_now_add=True)
     creator = models.ForeignKey(User, models.SET_NULL, null=True)
     last_modified = models.DateTimeField(auto_now=True)
-    last_modified_by = models.ForeignKey(User, models.SET_NULL, null=True)
+    # last_modified_by = models.ForeignKey(User, models.SET_NULL, null=True)
 
     helpset = models.ForeignKey(HelpSet, models.CASCADE, related_name="lexemes")
     text = models.CharField(max_length=100)
@@ -77,7 +77,7 @@ class Link(models.Model):
     date_created = models.DateField(auto_now_add=True)
     creator = models.ForeignKey(User, models.SET_NULL, null=True)
     last_modified = models.DateTimeField(auto_now=True)
-    last_modified_by = models.ForeignKey(User, models.SET_NULL, null=True)
+    # last_modified_by = models.ForeignKey(User, models.SET_NULL, null=True)
 
     helpset = models.ForeignKey(HelpSet, models.CASCADE, related_name="links")
     word = models.CharField(max_length=100)
@@ -97,14 +97,19 @@ class Link(models.Model):
         ]
 
 
-class BookHelpSetInstance(models.Model):
-    """Through table for Book and HelpSet to enable ordering."""
+class HelpSetAssignment(models.Model):
+    """Through table for Book and HelpSet to enable ordering. A helpset is
+    assigned to a book to enable vocabulary help. If a book has multiple
+    helpsets assigned to it, helpsets are accessed in order when a word is
+    looked up. For instance, if you have a text that generally aligns with
+    Koine Greek but with a few exceptions, you can make another helpset
+    and order it higher so to override the default Koine definition."""
     book = models.ForeignKey("Book", models.CASCADE)
     helpset = models.ForeignKey(HelpSet, models.CASCADE)
     order = models.IntegerField()
 
     def __str__(self) -> str:
-        return f"{self.book} -> {self.helpset.name} ({self.order})"
+        return f"{self.helpset.name} -> {self.book} ({self.order})"
 
     class Meta:
         constraints = [
@@ -121,11 +126,11 @@ class Book(models.Model):
     date_created = models.DateField(auto_now_add=True)
     creator = models.ForeignKey(User, models.SET_NULL, null=True)
     last_modified = models.DateTimeField(auto_now=True)
-    last_modified_by = models.ForeignKey(User, models.SET_NULL, null=True)
+    # last_modified_by = models.ForeignKey(User, models.SET_NULL, null=True)
 
     name = models.CharField(max_length=100, unique=True)
     text = models.JSONField()
-    helpsets = models.ManyToManyField(HelpSet, through=BookHelpSetInstance, blank=True)
+    helpsets = models.ManyToManyField(HelpSet, through=HelpSetAssignment, blank=True)
 
     def __str__(self) -> str:
         return self.name
