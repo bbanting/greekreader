@@ -69,7 +69,7 @@ class Lexeme(models.Model):
         ]
 
 
-class Link(models.Model):
+class Word(models.Model):
     """A link between a concrete word form and the lexeme it is derived from.
     Distinct lexemes may have forms that are morphologically identical and
     so multiple links may have the same text but point to different lexemes.
@@ -79,19 +79,19 @@ class Link(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
     # last_modified_by = models.ForeignKey(User, models.SET_NULL, null=True)
 
-    helpset = models.ForeignKey(HelpSet, models.CASCADE, related_name="links")
-    word = models.CharField(max_length=100)
-    lexeme = models.ForeignKey(Lexeme, models.CASCADE, related_name="links")
+    helpset = models.ForeignKey(HelpSet, models.CASCADE, related_name="words")
+    text = models.CharField(max_length=100)
+    lexeme = models.ForeignKey(Lexeme, models.CASCADE, related_name="words")
     parse_data = models.CharField(max_length=200, blank=True, default="")
 
     def __str__(self) -> str:
         return f"{self.word} -> {self.lexeme.text} ({self.helpset})"
 
     class Meta:
-        ordering = ["word"]
+        ordering = ["text"]
         constraints = [
             models.UniqueConstraint(
-                fields=["word", "lexeme"],
+                fields=["text", "lexeme"],
                 name="word_lexeme_pair_unique",
             ),
         ]

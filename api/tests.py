@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.db.models import Model
 from django.contrib.auth.models import User
 
-from .models import HelpSet, Lexeme, Link, Root
+from .models import HelpSet, Lexeme, Word, Root
 
 
 def exists(model:Model, pk:Any, pk_field_name:str="pk", manager:str="_default_manager") -> bool:
@@ -43,12 +43,12 @@ class HelpSetTestCase(TestCase):
     def test_last_modified_updated_on_link_save(self) -> None:
         lex = Lexeme.objects.create(helpset=self.hs, text="hello")
         last_modified = self.hs.last_modified
-        Link.objects.create(helpset=self.hs, word="hey", lexeme=lex)
+        Word.objects.create(helpset=self.hs, word="hey", lexeme=lex)
         self.assertGreater(self.hs.last_modified, last_modified)
 
     def test_last_modified_updated_on_link_delete(self) -> None:
         lex = Lexeme.objects.create(helpset=self.hs, text="hello")
-        link = Link.objects.create(helpset=self.hs, word="hey", lexeme=lex)
+        link = Word.objects.create(helpset=self.hs, word="hey", lexeme=lex)
         last_modified = self.hs.last_modified
         link.delete()
         self.assertGreater(self.hs.last_modified, last_modified)

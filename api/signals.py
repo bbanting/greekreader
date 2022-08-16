@@ -3,12 +3,12 @@ from django.db.models.signals import post_save, post_delete
 from django.utils import timezone
 from django.dispatch import receiver
 
-from .models import Root, Lexeme, Link
+from .models import Root, Lexeme, Word
 
 
 @receiver((post_save, post_delete), sender=Root)
 @receiver((post_save, post_delete), sender=Lexeme)
-@receiver((post_save, post_delete), sender=Link)
+@receiver((post_save, post_delete), sender=Word)
 def helpset_update_last_modified(sender, **kwargs) -> None:
     """Update the last_modified attribute of the HelpSet. This may be
     replaced by custom save() and delete() methods in the future
