@@ -54,7 +54,7 @@ class Lexeme(models.Model):
     text = models.CharField(max_length=100)
     root = models.ForeignKey(Root, models.SET_NULL, null=True, blank=True)
     help_text = models.TextField(null=True, blank=True)
-    help_image = models.ImageField(default="", blank=True)
+    help_images = models.ManyToManyField
 
     def __str__(self) -> str:
         return f"{self.text} ({self.helpset})"
@@ -69,10 +69,17 @@ class Lexeme(models.Model):
         ]
 
 
+class HelpImage(models.Model):
+    """An image to be used as a vocabulary help. May be linked to
+    multiple lexemes.
+    """
+    image = models.ImageField(upload_to="images/")
+
+
 class Word(models.Model):
     """A link between a concrete word form and the lexeme it is derived from.
     Distinct lexemes may have forms that are morphologically identical and
-    so multiple links may have the same text but point to different lexemes.
+    so multiple Words may have the same text but point to different lexemes.
     """
     date_created = models.DateField(auto_now_add=True)
     creator = models.ForeignKey(User, models.SET_NULL, null=True)
@@ -134,3 +141,13 @@ class Book(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+
+class Collection(models.Model):
+    """A collection of books."""
+    date_created = models.DateField(auto_now_add=True)
+    creator = models.ForeignKey(User, models.SET_NULL, null=True)
+    last_modified = models.DateTimeField(auto_now=True)
+    
+    name = models.CharField(max_length=100, unique=True)
+    books = models.ManyToManyField(Book, blank=True)

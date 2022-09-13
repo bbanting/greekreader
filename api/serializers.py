@@ -1,34 +1,56 @@
 from rest_framework import serializers
 
-from .models import HelpSet, Root, Lexeme, Word, Book
+from .models import HelpSet, Root, Lexeme, Word, Book, Collection
 
 
-class HelpSetSerializer(serializers.ModelSerializer):
+### ADMIN SERIALIZERS
+
+class HelpSetSerializerAdmin(serializers.ModelSerializer):
     class Meta:
         model = HelpSet
-        fields= ["name", "date_created", "creator"]
+        fields = "__all__"
 
+
+class BookSerializerAdmin(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = "__all__"
+
+
+class CollectionSerializerAdmin(serializers.ModelSerializer):
+    class Meta:
+        model = Collection
+        fields = "__all__"
+
+
+class RootSerializerAdmin(serializers.ModelSerializer):
+    class Meta:
+        model = Root
+        fields = "__all__"
+
+
+class LexemeSerializerAdmin(serializers.ModelSerializer):
+    class Meta:
+        model = Lexeme
+        fields = "__all__"
+
+
+class WordSerializerAdmin(serializers.ModelSerializer):
+    class Meta:
+        model = Word
+        fields = "__all__"
+        
+
+### NORMAL SERIALIZERS
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ["name", "text", "date_created", "creator"]
+        fields = ["name", "text"]
 
 
-class RootSerializer(serializers.ModelSerializer):
+class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Root
-        fields = ["text", "helpset", "date_created", "creator"]
+        model = Collection
+        fields = ["name", "books"]
 
-
-class LexemeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Lexeme
-        fields = ["text", "helpset", "root", "help_text", "help_image", "date_created", "creator"]
-
-
-class WordSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Word
-        fields = ["word", "helpset", "lexeme", "parse_data", "date_created", "creator"]
-        
