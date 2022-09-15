@@ -9,13 +9,13 @@ from . import serializers, models
 class HelpSetList(generics.ListCreateAPIView):
     """List current helpsets or create a new helpset."""
     queryset = models.HelpSet.objects.all()
-    serializer_class = serializers.HelpSetSerializer
+    serializer_class = serializers.HelpSetSerializerAdmin
 
 
 class HelpSetDetail(generics.RetrieveUpdateDestroyAPIView):
     """View or modify one particular helpset."""
     queryset = models.HelpSet.objects.all()
-    serializer_class = serializers.HelpSetSerializer
+    serializer_class = serializers.HelpSetSerializerAdmin
 
 
 class BookList(generics.ListCreateAPIView):

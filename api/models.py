@@ -44,7 +44,7 @@ class Root(models.Model):
 class Lexeme(models.Model):
     """An abstract lexeme."""
     # NOTE: User should be warned when deleting a lexeme 
-    # that still has links as they will also be deleted.
+    # that still has Words as they will also be deleted.
     date_created = models.DateField(auto_now_add=True)
     creator = models.ForeignKey(User, models.SET_NULL, null=True)
     last_modified = models.DateTimeField(auto_now=True)
@@ -54,7 +54,7 @@ class Lexeme(models.Model):
     text = models.CharField(max_length=100)
     root = models.ForeignKey(Root, models.SET_NULL, null=True, blank=True)
     help_text = models.TextField(null=True, blank=True)
-    help_images = models.ManyToManyField
+    help_images = models.ManyToManyField("HelpImage")
 
     def __str__(self) -> str:
         return f"{self.text} ({self.helpset})"
@@ -150,4 +150,4 @@ class Collection(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
     
     name = models.CharField(max_length=100, unique=True)
-    books = models.ManyToManyField(Book, blank=True)
+    books = models.ManyToManyField(Book, blank=True, related_name="collections")
