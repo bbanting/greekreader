@@ -54,7 +54,7 @@ class Lexeme(models.Model):
     text = models.CharField(max_length=100)
     root = models.ForeignKey(Root, models.SET_NULL, null=True, blank=True)
     help_text = models.TextField(null=True, blank=True)
-    help_images = models.ManyToManyField("HelpImage")
+    help_images = models.ManyToManyField("HelpImage", blank=True, null=True)
 
     def __str__(self) -> str:
         return f"{self.text} ({self.helpset})"
@@ -92,7 +92,7 @@ class Word(models.Model):
     parse_data = models.CharField(max_length=200, blank=True, default="")
 
     def __str__(self) -> str:
-        return f"{self.word} -> {self.lexeme.text} ({self.helpset})"
+        return f"{self.text} -> {self.lexeme.text} ({self.helpset})"
 
     class Meta:
         ordering = ["text"]
@@ -136,7 +136,7 @@ class Book(models.Model):
     # last_modified_by = models.ForeignKey(User, models.SET_NULL, null=True)
 
     name = models.CharField(max_length=100, unique=True)
-    text = models.JSONField()
+    content = models.JSONField()
     helpsets = models.ManyToManyField(HelpSet, through=HelpSetAssignment, blank=True)
 
     def __str__(self) -> str:

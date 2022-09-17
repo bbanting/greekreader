@@ -33,13 +33,13 @@ class BookDetail(generics.RetrieveUpdateDestroyAPIView):
 class RootList(generics.ListCreateAPIView):
     """List roots or create a new root."""
     queryset = models.Root.objects.all()
-    serializer_class = serializers.RootSerializer
+    serializer_class = serializers.RootSerializerAdmin
 
 
 class RootDetail(generics.RetrieveUpdateDestroyAPIView):
     """View or modifiy one particular root."""
     queryset = models.Root.objects.all()
-    serializer_class = serializers.RootSerializer
+    serializer_class = serializers.RootSerializerAdmin
 
 
 class LexemeList(generics.ListCreateAPIView):

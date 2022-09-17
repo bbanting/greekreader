@@ -40,7 +40,7 @@ class WordSerializerAdmin(serializers.ModelSerializer):
         model = Word
         fields = "__all__"
         
-        
+
 class HelpImageSerializerAdmin(serializers.ModelSerializer):
     class Meta:
         model = HelpImage
@@ -61,8 +61,8 @@ class CollectionSerializer(serializers.ModelSerializer):
         fields = ["name", "books"]
 
 
-class HelpImageSerializer(serializers.Serialier):
-    ...
+class HelpImageSerializer(serializers.Serializer):
+    url = serializers.ImageField(source="image")
 
 
 class LexemeSerializer(serializers.Serializer):
