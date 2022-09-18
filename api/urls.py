@@ -14,4 +14,5 @@ urlpatterns = [
     path("lexemes/<int:pk>", views.LexemeDetail.as_view(), name="lexeme-detail"),
     path("words/", views.WordList.as_view(), name="list-words"),
     path("words/<int:pk>", views.WordDetail.as_view(), name="word-detail"),
+    path("words/<text>", views.WordHelp.as_view(), name="word-help"),
 ]

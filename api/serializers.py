@@ -32,7 +32,8 @@ class RootSerializerAdmin(serializers.ModelSerializer):
 class LexemeSerializerAdmin(serializers.ModelSerializer):
     class Meta:
         model = Lexeme
-        fields = "__all__"
+        # fields = "__all__"
+        exclude = ["help_images"]
 
 
 class WordSerializerAdmin(serializers.ModelSerializer):
