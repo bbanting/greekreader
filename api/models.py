@@ -54,19 +54,13 @@ class Lexeme(models.Model):
     text = models.CharField(max_length=100)
     root = models.ForeignKey(Root, models.SET_NULL, null=True, blank=True)
     help_text = models.TextField(null=True, blank=True)
-    help_images = models.ManyToManyField("HelpImage", blank=True, null=True)
+    help_images = models.ManyToManyField("HelpImage", blank=True)
 
     def __str__(self) -> str:
         return f"{self.text} ({self.helpset})"
 
     class Meta:
         ordering = ["text"]
-        constraints = [
-            models.UniqueConstraint(
-                fields=["text", "helpset"], 
-                name="lexeme_text_unqiue",
-            )
-        ]
 
 
 class HelpImage(models.Model):
@@ -136,7 +130,7 @@ class Book(models.Model):
     # last_modified_by = models.ForeignKey(User, models.SET_NULL, null=True)
 
     name = models.CharField(max_length=100, unique=True)
-    content = models.JSONField()
+    content = models.JSONField(blank=True, null=True)
     helpsets = models.ManyToManyField(HelpSet, through=HelpSetAssignment, blank=True)
 
     def __str__(self) -> str:

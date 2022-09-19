@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import permissions
@@ -85,6 +86,14 @@ class WordDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAdminUser]
 
 
-class WordHelp(generics.GenericAPIView):
+class WordHelp(generics.ListAPIView):
+    """Displays help for a word form to the reader."""
+    serializer_class = serializers.WordSerializer
+
     def get_queryset(self):
-        return super().get_queryset()
+        """Search for the word in all relevant helpsets; return first match."""
+        helpsets = models.Book.objects.get(pk=self.kwargs["bookid"]).helpsets.all()
+        for hs in helpsets:
+            if words := models.Word.objects.filter(text=self.kwargs["text"], helpset=hs):
+                return words
+        raise Http404()
