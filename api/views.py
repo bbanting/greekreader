@@ -8,6 +8,16 @@ from rest_framework.views import APIView
 from . import serializers, models
 
 
+class IsAdminOrReadOnly(permissions.BasePermission):
+    """The user is an admin or the method is safe."""
+    def has_permission(self, request, view):
+        return bool(
+            request.method in permissions.SAFE_METHODS or
+            request.user.is_staff and
+            request.user.is_authenticated
+        )
+
+
 class HelpSetList(generics.ListCreateAPIView):
     """List current helpsets or create a new helpset."""
     queryset = models.HelpSet.objects.all()
@@ -24,7 +34,10 @@ class HelpSetDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class BookList(generics.ListCreateAPIView):
     """List books or create a new book."""
-    queryset = models.Book.objects.all()
+    permission_classes = [IsAdminOrReadOnly]
+
+    def get_queryset(self):
+        return self.request.user.profile.books.all()
 
     def get_serializer_class(self):
         if self.request.user.is_staff:
@@ -36,6 +49,10 @@ class BookList(generics.ListCreateAPIView):
 class BookDetail(generics.RetrieveUpdateDestroyAPIView):
     """View or modifiy one particular book."""
     queryset = models.Book.objects.all()
+    permission_classes = [IsAdminOrReadOnly]
+
+    def get_queryset(self):
+        return self.request.user.profile.books.all()
     
     def get_serializer_class(self):
         if self.request.user.is_staff:
@@ -89,6 +106,7 @@ class WordDetail(generics.RetrieveUpdateDestroyAPIView):
 class WordHelp(generics.ListAPIView):
     """Displays help for a word form to the reader."""
     serializer_class = serializers.WordSerializer
+    http_method_names = ["get", "head"]
 
     def get_queryset(self):
         """Search for the word in all relevant helpsets; return first match."""

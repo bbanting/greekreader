@@ -53,7 +53,7 @@ class HelpImageSerializerAdmin(serializers.ModelSerializer):
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ["name", "text"]
+        fields = ["name", "content"]
 
 
 class CollectionSerializer(serializers.ModelSerializer):
