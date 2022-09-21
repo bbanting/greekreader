@@ -1,5 +1,6 @@
 from django.http import Http404
-from django.shortcuts import render
+from django.contrib.auth.views import LoginView, LogoutView
+
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.response import Response
@@ -37,7 +38,8 @@ class BookList(generics.ListCreateAPIView):
     permission_classes = [IsAdminOrReadOnly]
 
     def get_queryset(self):
-        return self.request.user.profile.books.all()
+        ...
+        # return self.request.user.profile.books.all()
 
     def get_serializer_class(self):
         if self.request.user.is_staff:
@@ -52,7 +54,8 @@ class BookDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminOrReadOnly]
 
     def get_queryset(self):
-        return self.request.user.profile.books.all()
+        ...
+        # return self.request.user.profile.books.all()
     
     def get_serializer_class(self):
         if self.request.user.is_staff:
