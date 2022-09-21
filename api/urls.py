@@ -4,8 +4,6 @@ from . import views
 
 
 urlpatterns = [
-    path("login/", views.LoginView.as_view(template_name="api/login.html"), name="login"),
-    path("auth/", include("rest_framework.urls")),
     path("helpsets/", views.HelpSetList.as_view(), name="list-create-helpset"),
     path("helpsets/<int:pk>/", views.HelpSetDetail.as_view(), name="helpset-detail"),
     path("books/", views.BookList.as_view(), name="list-books"),

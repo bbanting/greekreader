@@ -19,6 +19,15 @@ class IsAdminOrReadOnly(permissions.BasePermission):
         )
 
 
+class Login(LoginView):
+    redirect_authenticated_user = False
+    template_name = "api/login.html"
+
+
+class Logout(LogoutView):
+    ...
+
+
 class HelpSetList(generics.ListCreateAPIView):
     """List current helpsets or create a new helpset."""
     queryset = models.HelpSet.objects.all()
