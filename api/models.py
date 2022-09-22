@@ -1,12 +1,16 @@
 from enum import unique
-import string
-import re
 import uuid
 
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from django.core.exceptions import ValidationError
+
+
+class Profile(models.Model):
+    """Profile for a user."""
+    user = models.OneToOneField(User, models.CASCADE)
+    is_teacher = models.BooleanField()
+    is_student = models.BooleanField()
 
 
 class HelpSet(models.Model):
@@ -132,6 +136,16 @@ class HelpSetAssignment(models.Model):
         ]
 
 
+# NOTE: Need to decide if
+class Collection(models.Model):
+    """A grouping of books."""
+    date_created = models.DateField(auto_now_add=True)
+    creator = models.ForeignKey(User, models.SET_NULL, null=True)
+    last_modified = models.DateTimeField(auto_now=True)
+    
+    name = models.CharField(max_length=100, unique=True)
+
+
 class Book(models.Model):
     """A book. Essentially just text but stored in the JSON format 
     for use by the JS frontend."""
@@ -148,11 +162,22 @@ class Book(models.Model):
         return self.name
 
 
-class Collection(models.Model):
-    """A collection of books."""
+class BookPurchase(models.Model):
+    """Record of a teacher's purchase of a book."""
     date_created = models.DateField(auto_now_add=True)
-    creator = models.ForeignKey(User, models.SET_NULL, null=True)
     last_modified = models.DateTimeField(auto_now=True)
-    
-    name = models.CharField(max_length=100, unique=True)
-    books = models.ManyToManyField(Book, blank=True, related_name="collections")
+
+    teacher = models.ForeignKey(User, models.CASCADE)
+    book = models.ForeignKey(Book, models.CASCADE)
+    collections = models.ManyToManyField(Collection, blank=True)
+
+
+class BookAccess(models.Model):
+    """Access to a book, granted to a student by a teacher."""
+    date_created = models.DateField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    teacher = models.ForeignKey(User, models.CASCADE)
+    student = models.ForeignKey(User, models.CASCADE)
+    book = models.ForeignKey(BookPurchase, models.CASCADE)
+        
