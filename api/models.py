@@ -113,6 +113,15 @@ class Word(models.Model):
         ]
 
 
+class Collection(models.Model):
+    """A grouping of books."""
+    date_created = models.DateField(auto_now_add=True)
+    creator = models.ForeignKey(User, models.SET_NULL, null=True)
+    last_modified = models.DateTimeField(auto_now=True)
+    
+    name = models.CharField(max_length=100, unique=True)
+
+
 class HelpSetAssignment(models.Model):
     """Through table for Book and HelpSet to enable ordering. A helpset is
     assigned to a book to enable vocabulary help. If a book has multiple
@@ -136,30 +145,40 @@ class HelpSetAssignment(models.Model):
         ]
 
 
-# NOTE: Need to decide if
-class Collection(models.Model):
-    """A grouping of books."""
-    date_created = models.DateField(auto_now_add=True)
-    creator = models.ForeignKey(User, models.SET_NULL, null=True)
-    last_modified = models.DateTimeField(auto_now=True)
-    
-    name = models.CharField(max_length=100, unique=True)
-
-
 class Book(models.Model):
-    """A book. Essentially just text but stored in the JSON format 
-    for use by the JS frontend."""
+    """A book, divided into chapters."""
     date_created = models.DateField(auto_now_add=True)
     creator = models.ForeignKey(User, models.SET_NULL, null=True)
     last_modified = models.DateTimeField(auto_now=True)
     # last_modified_by = models.ForeignKey(User, models.SET_NULL, null=True)
 
     name = models.CharField(max_length=100, unique=True)
-    content = models.JSONField(blank=True, null=True)
+    cover_image = models.ForeignKey(HelpImage, models.SET_NULL, blank=True, null=True)
     helpsets = models.ManyToManyField(HelpSet, through=HelpSetAssignment, blank=True)
 
     def __str__(self) -> str:
         return self.name
+
+
+class Chapter(models.Model):
+    """A chapter in a book."""
+    book = models.ForeignKey(Book, models.CASCADE, related_name="chapters")
+    order = models.IntegerField()
+    ordinal_text = models.CharField(max_length=50)
+    heading = models.CharField(max_length=100, blank=True, default="")
+    content = models.JSONField(blank=True, null=True)
+
+    def __str__(self) -> str:
+        return f"{self.book.name}: {self.ordinal_text} ({self.order})"
+
+    class Meta:
+        ordering = ["order"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["book", "order"],
+                name="chapter_order_unique",
+            ),
+        ]
 
 
 class BookPurchase(models.Model):
@@ -177,7 +196,8 @@ class BookAccess(models.Model):
     date_created = models.DateField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
-    teacher = models.ForeignKey(User, models.CASCADE)
-    student = models.ForeignKey(User, models.CASCADE)
+    teacher = models.ForeignKey(User, models.CASCADE, related_name="books_granted")
+    student = models.ForeignKey(User, models.CASCADE, related_name="books_received")
     book = models.ForeignKey(BookPurchase, models.CASCADE)
+    chapters = models.ManyToManyField(Chapter)
         

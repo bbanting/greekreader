@@ -45,17 +45,12 @@ class HelpSetDetail(generics.RetrieveUpdateDestroyAPIView):
 class BookList(generics.ListCreateAPIView):
     """List books or create a new book."""
     permission_classes = [IsAdminOrReadOnly]
+    serializer_class = serializers.BookSerializerList
 
     def get_queryset(self):
-        ...
-        # return self.request.user.profile.books.all()
-
-    def get_serializer_class(self):
-        if self.request.user.is_staff:
-            return serializers.BookSerializerAdmin
-        else:
-            return serializers.BookSerializer
-
+        return models.Book.objects.all()
+    #     return self.request.user.profile.books.all()
+            
 
 class BookDetail(generics.RetrieveUpdateDestroyAPIView):
     """View or modifiy one particular book."""
@@ -69,8 +64,10 @@ class BookDetail(generics.RetrieveUpdateDestroyAPIView):
     def get_serializer_class(self):
         if self.request.user.is_staff:
             return serializers.BookSerializerAdmin
+        elif self.request.user.profile.is_teacher:
+            return serializers.BookSerializerTeacher
         else:
-            return serializers.BookSerializer
+            return serializers.BookSerializerStudent
 
 
 class RootList(generics.ListCreateAPIView):

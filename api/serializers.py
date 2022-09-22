@@ -1,9 +1,7 @@
 from rest_framework import serializers
 
-from .models import HelpSet, Root, Lexeme, Word, Book, Collection, HelpImage
+from .models import BookAccess, BookPurchase, HelpSet, Root, Lexeme, Word, Book, Collection, HelpImage, Chapter
 
-
-### ADMIN SERIALIZERS
 
 class HelpSetSerializerAdmin(serializers.ModelSerializer):
     class Meta:
@@ -11,10 +9,36 @@ class HelpSetSerializerAdmin(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class BookSerializerList(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = ["id", "name", "cover_image"]
+
+
+class ChapterSerializer(serializers.ModelSerializer):
+    book = BookSerializerList()
+
+    class Meta:
+        model = Chapter
+        fields = ["book", "ordinal_text", "heading", "content"]
+
+
 class BookSerializerAdmin(serializers.ModelSerializer):
+    chapters = ChapterSerializer(many=True)
+
     class Meta:
         model = Book
         fields = "__all__"
+        
+
+class BookSerializerTeacher(serializers.ModelSerializer):
+    ...
+
+
+class BookSerializerStudent(serializers.Serializer):
+    id = serializers.IntegerField(source="book.pk")
+    name = serializers.CharField(source="book.name")
+    chapters = ChapterSerializer()
 
 
 class CollectionSerializerAdmin(serializers.ModelSerializer):
@@ -46,14 +70,6 @@ class HelpImageSerializerAdmin(serializers.ModelSerializer):
     class Meta:
         model = HelpImage
         fields = "__all__"
-        
-
-### NORMAL SERIALIZERS
-
-class BookSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Book
-        fields = ["name", "content"]
 
 
 class CollectionSerializer(serializers.ModelSerializer):
