@@ -64,6 +64,7 @@ class CollectionSerializer(serializers.ModelSerializer):
 
 class HelpImageSerializer(serializers.Serializer):
     url = serializers.ImageField(source="image")
+    title = serializers.CharField(max_length=100)
 
 
 class LexemeSerializer(serializers.Serializer):

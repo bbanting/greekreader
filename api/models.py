@@ -1,6 +1,11 @@
+from enum import unique
+import string
+import re
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 
 class HelpSet(models.Model):
@@ -63,11 +68,22 @@ class Lexeme(models.Model):
         ordering = ["text"]
 
 
+def name_image_file(instance, filename) -> str:
+    title = re.sub("\s", "-", instance.title, flags=[re.ASCII])
+    extension = filename[filename.rfind("."):]
+    return f"images/{title}{extension}"
+
+def validate_title(value:str) -> None:
+    allowed_chars = string.ascii_letters + string.digits + " _-"
+    if re.search(f"[^{allowed_chars}]", value):
+        raise ValidationError("Invalid characters used in title.")
+
 class HelpImage(models.Model):
     """An image to be used as a vocabulary help. May be linked to
     multiple lexemes.
     """
-    image = models.ImageField(upload_to="images/")
+    title = models.CharField(max_length=100, validators=[validate_title], unique=True)
+    image = models.ImageField(upload_to=name_image_file)
 
 
 class Word(models.Model):
