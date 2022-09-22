@@ -1,6 +1,7 @@
 from enum import unique
 import string
 import re
+import uuid
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -69,20 +70,14 @@ class Lexeme(models.Model):
 
 
 def name_image_file(instance, filename) -> str:
-    title = re.sub("\s", "-", instance.title, flags=[re.ASCII])
     extension = filename[filename.rfind("."):]
-    return f"images/{title}{extension}"
-
-def validate_title(value:str) -> None:
-    allowed_chars = string.ascii_letters + string.digits + " _-"
-    if re.search(f"[^{allowed_chars}]", value):
-        raise ValidationError("Invalid characters used in title.")
+    return f"images/{uuid.uuid4()}{extension}"
 
 class HelpImage(models.Model):
     """An image to be used as a vocabulary help. May be linked to
     multiple lexemes.
     """
-    title = models.CharField(max_length=100, validators=[validate_title], unique=True)
+    title = models.CharField(max_length=100, unique=True)
     image = models.ImageField(upload_to=name_image_file)
 
 
