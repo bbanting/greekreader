@@ -45,7 +45,7 @@ class HelpSetDetail(generics.RetrieveUpdateDestroyAPIView):
 class BookList(generics.ListCreateAPIView):
     """List books or create a new book."""
     permission_classes = [IsAdminOrReadOnly]
-    serializer_class = serializers.BookSerializerList
+    serializer_class = serializers.BookSerializerMin
 
     def get_queryset(self):
         return models.Book.objects.all()
@@ -65,9 +65,9 @@ class BookDetail(generics.RetrieveUpdateDestroyAPIView):
         if self.request.user.is_staff:
             return serializers.BookSerializerAdmin
         elif self.request.user.profile.is_teacher:
-            return serializers.BookSerializerTeacher
+            return serializers.BookPurchaseSerializer
         else:
-            return serializers.BookSerializerStudent
+            return serializers.BookAccessSerializer
 
 
 class RootList(generics.ListCreateAPIView):
