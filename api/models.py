@@ -1,4 +1,3 @@
-from enum import unique
 import uuid
 
 from django.db import models
@@ -6,11 +5,24 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 
-class Profile(models.Model):
-    """Profile for a user."""
-    user = models.OneToOneField(User, models.CASCADE)
-    is_teacher = models.BooleanField()
-    is_student = models.BooleanField()
+
+class StudyGroup(models.Model):
+    """A group of students with at least one 'teacher'."""
+    date_created = models.DateField(auto_now_add=True)
+    creator = models.ForeignKey(User, models.SET_NULL, null=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    lead = models.ForeignKey(User, models.SET_NULL)
+    users = models.ManyToManyField(User, through="Membership", blank=True)
+
+
+class Membership(models.Model):
+    """A user's membership in a study group. The through model for Profile 
+    and StudyGroup.
+    """
+    studygroup = models.ForeignKey(StudyGroup, models.CASCADE)
+    user = models.ForeignKey(User, models.CASCADE)
+    is_teacher = models.BooleanField(default=False)
 
 
 class HelpSet(models.Model):
@@ -113,13 +125,15 @@ class Word(models.Model):
         ]
 
 
+# NOTE: There should be a limit of how many collections a user can make
 class Collection(models.Model):
-    """A grouping of books."""
+    """An arbitrary grouping of books by the user."""
     date_created = models.DateField(auto_now_add=True)
-    creator = models.ForeignKey(User, models.SET_NULL, null=True)
     last_modified = models.DateTimeField(auto_now=True)
-    
-    name = models.CharField(max_length=100, unique=True)
+
+    owner = models.ForeignKey(User, models.CASCADE)
+    name = models.CharField(max_length=50, unique=True)
+    books = models.ManyToManyField("BookAccess")
 
 
 class HelpSetAssignment(models.Model):
@@ -188,7 +202,6 @@ class BookPurchase(models.Model):
 
     teacher = models.ForeignKey(User, models.CASCADE)
     book = models.ForeignKey(Book, models.CASCADE)
-    collections = models.ManyToManyField(Collection, blank=True)
 
 
 class BookAccess(models.Model):
