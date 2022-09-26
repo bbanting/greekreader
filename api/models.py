@@ -9,11 +9,16 @@ from django.utils import timezone
 class StudyGroup(models.Model):
     """A group of students with at least one 'teacher'."""
     date_created = models.DateField(auto_now_add=True)
-    creator = models.ForeignKey(User, models.SET_NULL, null=True)
+    creator = models.ForeignKey(User, models.CASCADE)
     last_modified = models.DateTimeField(auto_now=True)
 
-    lead = models.ForeignKey(User, models.SET_NULL)
-    users = models.ManyToManyField(User, through="Membership", blank=True)
+    users = models.ManyToManyField(User, through="Membership", blank=True, related_name="studygroups")
+    TIER_CHOICES = [(1, "One"), (2, "Two"), (3, "Three")]
+    tier = models.IntegerField(choices=TIER_CHOICES, default=1)
+    active_books = models.ManyToManyField("Book", blank=True)
+
+    class Meta:
+        ordering = ["-tier"]
 
 
 class Membership(models.Model):
@@ -169,6 +174,8 @@ class Book(models.Model):
     name = models.CharField(max_length=100, unique=True)
     cover_image = models.ForeignKey(HelpImage, models.SET_NULL, blank=True, null=True)
     helpsets = models.ManyToManyField(HelpSet, through=HelpSetAssignment, blank=True)
+    TIER_CHOICES = [(1, "One"), (2, "Two"), (3, "Three")]
+    tier = models.IntegerField(choices=TIER_CHOICES, default=1)
 
     def __str__(self) -> str:
         return self.name
@@ -193,24 +200,3 @@ class Chapter(models.Model):
                 name="chapter_order_unique",
             ),
         ]
-
-
-class BookPurchase(models.Model):
-    """Record of a teacher's purchase of a book."""
-    date_created = models.DateField(auto_now_add=True)
-    last_modified = models.DateTimeField(auto_now=True)
-
-    teacher = models.ForeignKey(User, models.CASCADE)
-    book = models.ForeignKey(Book, models.CASCADE)
-
-
-class BookAccess(models.Model):
-    """Access to a book, granted to a student by a teacher."""
-    date_created = models.DateField(auto_now_add=True)
-    last_modified = models.DateTimeField(auto_now=True)
-
-    teacher = models.ForeignKey(User, models.CASCADE, related_name="books_granted")
-    student = models.ForeignKey(User, models.CASCADE, related_name="books_received")
-    book = models.ForeignKey(BookPurchase, models.CASCADE)
-    chapters = models.ManyToManyField(Chapter)
-        
