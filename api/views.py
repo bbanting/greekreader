@@ -1,5 +1,4 @@
 from django.http import Http404
-from django.contrib.auth.views import LoginView, LogoutView
 
 from rest_framework import generics
 from rest_framework import permissions
@@ -17,15 +16,6 @@ class IsAdminOrReadOnly(permissions.BasePermission):
             request.user.is_staff and
             request.user.is_authenticated
         )
-
-
-class Login(LoginView):
-    redirect_authenticated_user = False
-    template_name = "api/login.html"
-
-
-class Logout(LogoutView):
-    ...
 
 
 class HelpSetList(generics.ListCreateAPIView):

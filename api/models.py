@@ -4,18 +4,20 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+from accounts.models import Human
 
 
 class StudyGroup(models.Model):
-    """A group of students with at least one 'teacher'."""
+    """A group of students with at least one teacher."""
     date_created = models.DateField(auto_now_add=True)
     creator = models.ForeignKey(User, models.CASCADE)
     last_modified = models.DateTimeField(auto_now=True)
 
+    name = models.CharField(max_length=50)
     users = models.ManyToManyField(User, through="Membership", blank=True, related_name="studygroups")
     TIER_CHOICES = [(1, "One"), (2, "Two"), (3, "Three")]
     tier = models.IntegerField(choices=TIER_CHOICES, default=1)
-    active_books = models.ManyToManyField("Book", blank=True)
+    shelf = models.ManyToManyField("Book", blank=True)
 
     class Meta:
         ordering = ["-tier"]
