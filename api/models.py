@@ -1,7 +1,6 @@
 import uuid
 
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils import timezone
 
 from accounts.models import Human
@@ -10,11 +9,11 @@ from accounts.models import Human
 class StudyGroup(models.Model):
     """A group of students with at least one teacher."""
     date_created = models.DateField(auto_now_add=True)
-    creator = models.ForeignKey(User, models.CASCADE)
+    creator = models.ForeignKey(Human, models.CASCADE)
     last_modified = models.DateTimeField(auto_now=True)
 
     name = models.CharField(max_length=50)
-    users = models.ManyToManyField(User, through="Membership", blank=True, related_name="studygroups")
+    users = models.ManyToManyField(Human, through="Membership", blank=True, related_name="studygroups")
     TIER_CHOICES = [(1, "One"), (2, "Two"), (3, "Three")]
     tier = models.IntegerField(choices=TIER_CHOICES, default=1)
     shelf = models.ManyToManyField("Book", blank=True)
@@ -28,14 +27,14 @@ class Membership(models.Model):
     and StudyGroup.
     """
     studygroup = models.ForeignKey(StudyGroup, models.CASCADE)
-    user = models.ForeignKey(User, models.CASCADE)
+    user = models.ForeignKey(Human, models.CASCADE)
     is_teacher = models.BooleanField(default=False)
 
 
 class HelpSet(models.Model):
     """A set of lexical helps."""
     date_created = models.DateField(auto_now_add=True)
-    creator = models.ForeignKey(User, models.SET_NULL, null=True)
+    creator = models.ForeignKey(Human, models.SET_NULL, null=True)
     last_modified = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=100, unique=True)
 
@@ -50,9 +49,9 @@ class HelpSet(models.Model):
 class Root(models.Model):
     """A lexical root. Used for grouping together related lexemes."""
     date_created = models.DateField(auto_now_add=True)
-    creator = models.ForeignKey(User, models.SET_NULL, null=True)
+    creator = models.ForeignKey(Human, models.SET_NULL, null=True)
     last_modified = models.DateTimeField(auto_now=True)
-    # last_modified_by = models.ForeignKey(User, models.SET_NULL, null=True)
+    # last_modified_by = models.ForeignKey(Human, models.SET_NULL, null=True)
 
     helpset = models.ForeignKey(HelpSet, models.CASCADE, related_name="roots")
     text = models.CharField(max_length=100)
@@ -75,9 +74,9 @@ class Lexeme(models.Model):
     # NOTE: User should be warned when deleting a lexeme 
     # that still has Words as they will also be deleted.
     date_created = models.DateField(auto_now_add=True)
-    creator = models.ForeignKey(User, models.SET_NULL, null=True)
+    creator = models.ForeignKey(Human, models.SET_NULL, null=True)
     last_modified = models.DateTimeField(auto_now=True)
-    # last_modified_by = models.ForeignKey(User, models.SET_NULL, null=True)
+    # last_modified_by = models.ForeignKey(Human, models.SET_NULL, null=True)
 
     helpset = models.ForeignKey(HelpSet, models.CASCADE, related_name="lexemes")
     text = models.CharField(max_length=100)
@@ -110,9 +109,9 @@ class Word(models.Model):
     so multiple Words may have the same text but point to different lexemes.
     """
     date_created = models.DateField(auto_now_add=True)
-    creator = models.ForeignKey(User, models.SET_NULL, null=True)
+    creator = models.ForeignKey(Human, models.SET_NULL, null=True)
     last_modified = models.DateTimeField(auto_now=True)
-    # last_modified_by = models.ForeignKey(User, models.SET_NULL, null=True)
+    # last_modified_by = models.ForeignKey(Human, models.SET_NULL, null=True)
 
     helpset = models.ForeignKey(HelpSet, models.CASCADE, related_name="words")
     text = models.CharField(max_length=100)
@@ -138,7 +137,7 @@ class Collection(models.Model):
     date_created = models.DateField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
-    owner = models.ForeignKey(User, models.CASCADE)
+    study_group = models.ForeignKey(Human, models.CASCADE)
     name = models.CharField(max_length=50, unique=True)
     books = models.ManyToManyField("BookAccess")
 
@@ -169,9 +168,9 @@ class HelpSetAssignment(models.Model):
 class Book(models.Model):
     """A book, divided into chapters."""
     date_created = models.DateField(auto_now_add=True)
-    creator = models.ForeignKey(User, models.SET_NULL, null=True)
+    creator = models.ForeignKey(Human, models.SET_NULL, null=True)
     last_modified = models.DateTimeField(auto_now=True)
-    # last_modified_by = models.ForeignKey(User, models.SET_NULL, null=True)
+    # last_modified_by = models.ForeignKey(Human, models.SET_NULL, null=True)
 
     name = models.CharField(max_length=100, unique=True)
     cover_image = models.ForeignKey(HelpImage, models.SET_NULL, blank=True, null=True)
@@ -188,7 +187,7 @@ class Chapter(models.Model):
     book = models.ForeignKey(Book, models.CASCADE, related_name="chapters")
     order = models.IntegerField()
     ordinal_text = models.CharField(max_length=50)
-    heading = models.CharField(max_length=100, blank=True, default="")
+    title = models.CharField(max_length=100, blank=True, default="")
     content = models.JSONField(blank=True, null=True)
 
     def __str__(self) -> str:
