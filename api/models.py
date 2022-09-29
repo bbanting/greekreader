@@ -184,6 +184,10 @@ class Book(models.Model):
 
 class Chapter(models.Model):
     """A chapter in a book."""
+    date_created = models.DateField(auto_now_add=True)
+    creator = models.ForeignKey(Human, models.SET_NULL, null=True)
+    last_modified = models.DateTimeField(auto_now=True)
+    
     book = models.ForeignKey(Book, models.CASCADE, related_name="chapters")
     order = models.IntegerField()
     ordinal_text = models.CharField(max_length=50)
