@@ -58,3 +58,10 @@ class WordDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Word.objects.all()
     serializer_class = serializers.WordSerializerAdmin
     permission_classes = [permissions.IsAdminUser]
+
+
+class BookList(generics.ListCreateAPIView):
+    """List books or create a new book."""
+    queryset = models.Book.objects.all()
+    serializer_class = serializers.BookSerializerAdmin
+    permission_classes = [permissions.IsAdminUser]

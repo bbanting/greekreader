@@ -16,16 +16,6 @@ class IsAdminOrReadOnly(permissions.BasePermission):
             request.user.is_staff and
             request.user.is_authenticated
         )
-
-
-class BookList(generics.ListCreateAPIView):
-    """List books or create a new book."""
-    permission_classes = [IsAdminOrReadOnly]
-    serializer_class = serializers.BookSerializerMin
-
-    def get_queryset(self):
-        return models.Book.objects.all()
-    #     return self.request.user.profile.books.all()
             
 
 class BookDetail(generics.RetrieveUpdateDestroyAPIView):

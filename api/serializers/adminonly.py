@@ -22,7 +22,7 @@ class ChapterSerializerAdmin(serializers.ModelSerializer):
 
 
 class BookSerializerAdmin(serializers.ModelSerializer):
-    chapters = ChapterSerializerAdmin(many=True)
+    chapters = serializers.PrimaryKeyRelatedField(many=True)
 
     class Meta:
         model = Book
