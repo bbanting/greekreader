@@ -4,8 +4,10 @@ from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import status
 
 import models, serializers
+
 
 
 class IsAdminOrReadOnly(permissions.BasePermission):
@@ -16,7 +18,17 @@ class IsAdminOrReadOnly(permissions.BasePermission):
             request.user.is_staff and
             request.user.is_authenticated
         )
-            
+
+
+class LibraryView(APIView):
+    """List the books available to the user."""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, format=None) -> Response:
+        groups = request.user.studygroups.all()
+        serializer = serializers.StudyGroupSerializer(groups, many=True)
+        return Response(serializer.data)
+
 
 class BookDetail(generics.RetrieveUpdateDestroyAPIView):
     """View or modifiy one particular book."""

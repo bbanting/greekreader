@@ -48,3 +48,9 @@ class WordSerializer(serializers.Serializer):
     text = serializers.CharField()
     lexeme = LexemeSerializer()
     parse_data = serializers.CharField(allow_blank=True)
+
+
+class StudyGroupSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=50)
+    shelf = BookSerializer(many=True)
+    
