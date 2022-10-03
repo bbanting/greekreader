@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from models import HelpSet, Root, Lexeme, Word, Book, Collection, HelpImage, Chapter
+from ..models import HelpSet, Root, Lexeme, Word, Book, Collection, HelpImage, Chapter
 
 
 class HelpSetSerializerAdmin(serializers.ModelSerializer):
@@ -22,7 +22,7 @@ class ChapterSerializerAdmin(serializers.ModelSerializer):
 
 
 class BookSerializerAdmin(serializers.ModelSerializer):
-    chapters = serializers.PrimaryKeyRelatedField(many=True)
+    chapters = serializers.PrimaryKeyRelatedField(many=True, queryset=Chapter.objects.all())
 
     class Meta:
         model = Book

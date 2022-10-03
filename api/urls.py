@@ -12,10 +12,13 @@ admin_only = [
     path("lexemes/<int:pk>/", views.LexemeDetail.as_view(), name="lexeme-detail"),
     path("words/", views.WordList.as_view(), name="list-words"),
     path("words/<int:pk>/", views.WordDetail.as_view(), name="word-detail"),
+    path("books/", views.BookList.as_view(), name="list-books"),
+    path("books/<int:pk>/", views.BookDetail.as_view(), name="book-detail"),
 ]
 
 urlpatterns = [
-    path("books/", views.BookList.as_view(), name="list-books"),
-    path("books/<int:pk>/", views.BookDetail.as_view(), name="book-detail"),
+    path("books/", views.LibraryView.as_view(), name="library"),
+    path("books/<int:pk>/", views.BookView.as_view(), name="book-view"),
     path("words/<int:bookid>/<text>/", views.WordHelp.as_view(), name="word-help"),
-] + admin_only
+    path("edit/", include(admin_only))
+]

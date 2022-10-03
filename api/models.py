@@ -139,7 +139,7 @@ class Collection(models.Model):
 
     study_group = models.ForeignKey(Human, models.CASCADE)
     name = models.CharField(max_length=50, unique=True)
-    books = models.ManyToManyField("BookAccess")
+    books = models.ManyToManyField("Book")
 
 
 class HelpSetAssignment(models.Model):
@@ -187,7 +187,7 @@ class Chapter(models.Model):
     date_created = models.DateField(auto_now_add=True)
     creator = models.ForeignKey(Human, models.SET_NULL, null=True)
     last_modified = models.DateTimeField(auto_now=True)
-    
+
     book = models.ForeignKey(Book, models.CASCADE, related_name="chapters")
     order = models.IntegerField()
     ordinal_text = models.CharField(max_length=50)

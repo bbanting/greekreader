@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from models import Lexeme, Word, Book, Collection, Chapter
+from ..models import Lexeme, Word, Book, Collection, Chapter
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -10,7 +10,7 @@ class CollectionSerializer(serializers.ModelSerializer):
 
 
 class ChapterSerializer(serializers.ModelSerializer):
-    book = serializers.PrimaryKeyRelatedField()
+    book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all())
 
     class Meta:
         model = Chapter
@@ -18,7 +18,7 @@ class ChapterSerializer(serializers.ModelSerializer):
 
 
 class ChapterSerializerMin(serializers.ModelSerializer):
-    book = serializers.PrimaryKeyRelatedField()
+    book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all())
 
     class Meta:
         model = Chapter

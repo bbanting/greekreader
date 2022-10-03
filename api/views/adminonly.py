@@ -1,7 +1,7 @@
 from rest_framework import generics
 from rest_framework import permissions
 
-import models, serializers
+from .. import models, serializers
 
 
 class HelpSetList(generics.ListCreateAPIView):

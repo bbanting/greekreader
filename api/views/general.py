@@ -1,3 +1,5 @@
+import urllib
+
 from django.http import Http404
 
 from rest_framework import generics
@@ -6,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 
-import models, serializers
+from .. import models, serializers
 
 
 
@@ -51,13 +53,32 @@ class BookView(generics.RetrieveAPIView):
 
 class WordHelp(generics.ListAPIView):
     """Displays help for a word form to the reader."""
+    permission_classes = [UserMayAccessBook]
     serializer_class = serializers.WordSerializer
     http_method_names = ["get", "head"]
 
     def get_queryset(self):
         """Search for the word in all relevant helpsets; return first match."""
-        helpsets = models.Book.objects.get(pk=self.kwargs["bookid"]).helpsets.all()
+        helpsets = self.get_book(self.kwargs["bookid"]).helpsets.all()
+        word_text = urllib.parse.unquote(self.kwargs["text"])
+
         for hs in helpsets:
-            if words := models.Word.objects.filter(text=self.kwargs["text"], helpset=hs):
+            if words := models.Word.objects.filter(text=word_text, helpset=hs):
                 return words
         raise Http404()
+
+    def get_book(self, id) -> models.Book:
+        """Return the book after checking if it exists and
+        the user has permission to read it."""
+        try:
+            book = models.Book.objects.get(pk=id)
+        except models.Book.DoesNotExist:
+            raise Http404()
+        else:
+            self.check_object_permissions(self.request, book)
+            return book
+
+    def get(self, request, format=None) -> Response:
+        words = self.get_queryset()
+        serializer = self.serializer_class(words, many=True)
+        return Response(serializer.data)

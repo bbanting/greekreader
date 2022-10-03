@@ -1,2 +1,2 @@
-from adminonly import *
-from general import *
+from .adminonly import *
+from .general import *
