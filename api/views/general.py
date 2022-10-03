@@ -20,32 +20,33 @@ class IsAdminOrReadOnly(permissions.BasePermission):
         )
 
 
+class UserMayAccessBook(permissions.BasePermission):
+    """Tells whether the user has access to view the book."""
+    def has_object_permission(self, request, view, obj):
+        for x in request.user.studygroups.all():
+            if obj in x.books.all():
+                return True
+        return False
+
+
 class LibraryView(APIView):
     """List the books available to the user."""
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None) -> Response:
+        """Return all the 'book shelves' for the groups the user is
+        a member of."""
         groups = request.user.studygroups.all()
         serializer = serializers.StudyGroupSerializer(groups, many=True)
         return Response(serializer.data)
-
-
-class BookDetail(generics.RetrieveUpdateDestroyAPIView):
-    """View or modifiy one particular book."""
-    queryset = models.Book.objects.all()
-    permission_classes = [IsAdminOrReadOnly]
-
-    def get_queryset(self):
-        ...
-        # return self.request.user.profile.books.all()
     
-    def get_serializer_class(self):
-        if self.request.user.is_staff:
-            return serializers.BookSerializerAdmin
-        elif self.request.user.profile.is_teacher:
-            return serializers.BookPurchaseSerializer
-        else:
-            return serializers.BookAccessSerializer
+
+class BookView(generics.RetrieveAPIView):
+    """View one book."""
+    permission_classes = [UserMayAccessBook]
+    serializer_class = serializers.BookSerializer
+    queryset = models.Book.objects.all()
+    lookup_field = "pk"
 
 
 class WordHelp(generics.ListAPIView):

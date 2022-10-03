@@ -65,3 +65,10 @@ class BookList(generics.ListCreateAPIView):
     queryset = models.Book.objects.all()
     serializer_class = serializers.BookSerializerAdmin
     permission_classes = [permissions.IsAdminUser]
+
+
+class BookDetail(generics.RetrieveUpdateDestroyAPIView):
+    """View or modifiy one particular book."""
+    queryset = models.Book.objects.all()
+    serializer_class = serializers.BookSerializerAdmin
+    permission_classes = [permissions.IsAdminUser]
