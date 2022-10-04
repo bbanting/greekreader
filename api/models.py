@@ -2,6 +2,7 @@ import uuid
 
 from django.db import models
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 from accounts.models import Human
 
@@ -182,6 +183,15 @@ class Book(models.Model):
         return self.name
 
 
+def not_negative(value:int) -> None:
+    """Check if a number value is negative."""
+    if value < 0:
+        raise ValidationError(
+            "The number may not be negative", 
+            params={"value": value}
+            )
+
+
 class Chapter(models.Model):
     """A chapter in a book."""
     date_created = models.DateField(auto_now_add=True)
@@ -189,7 +199,7 @@ class Chapter(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     book = models.ForeignKey(Book, models.CASCADE, related_name="chapters")
-    order = models.IntegerField()
+    order = models.IntegerField(validators=[not_negative])
     ordinal_text = models.CharField(max_length=50)
     title = models.CharField(max_length=100, blank=True, default="")
     content = models.JSONField(blank=True, null=True)
