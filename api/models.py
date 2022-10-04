@@ -36,7 +36,7 @@ class HelpSet(models.Model):
     """A set of lexical helps."""
     date_created = models.DateField(auto_now_add=True)
     creator = models.ForeignKey(Human, models.SET_NULL, null=True)
-    last_modified = models.DateTimeField(default=timezone.now)
+    last_modified = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self) -> str:
