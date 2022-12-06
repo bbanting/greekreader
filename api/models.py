@@ -117,19 +117,30 @@ class Word(models.Model):
     helpset = models.ForeignKey(HelpSet, models.CASCADE, related_name="words")
     text = models.CharField(max_length=100)
     lexeme = models.ForeignKey(Lexeme, models.CASCADE, related_name="words")
-    parse_data = models.CharField(max_length=200, blank=True, default="")
+    order = models.IntegerField(blank=True, default=0)
+    # parsings 
 
     def __str__(self) -> str:
         return f"{self.text} -> {self.lexeme.text} ({self.helpset})"
 
     class Meta:
-        ordering = ["text"]
+        ordering = ["text", "order"]
         constraints = [
             models.UniqueConstraint(
                 fields=["text", "lexeme"],
                 name="word_lexeme_pair_unique",
             ),
         ]
+
+
+class Parsing(models.Model):
+    """A parsing of a particular word form."""
+    date_created = models.DateField(auto_now_add=True)
+    creator = models.ForeignKey(Human, models.SET_NULL, null=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    word = models.ForeignKey(Word, models.CASCADE, related_name="parsings")
+    content = models.CharField(max_length=200)
 
 
 # NOTE: There should be a limit of how many collections a user can make
