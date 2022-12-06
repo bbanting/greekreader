@@ -58,7 +58,7 @@ class Root(models.Model):
     text = models.CharField(max_length=100)
 
     def __str__(self) -> str:
-        return f"{self.text} ({self.helpset})"
+        return f"({self.helpset}) {self.text}"
 
     class Meta:
         ordering = ["text"]
@@ -86,7 +86,7 @@ class Lexeme(models.Model):
     help_images = models.ManyToManyField("HelpImage", blank=True)
 
     def __str__(self) -> str:
-        return f"{self.text} ({self.helpset})"
+        return f"({self.helpset}) {self.text}"
 
     class Meta:
         ordering = ["text"]
@@ -121,7 +121,7 @@ class Word(models.Model):
     # parsings 
 
     def __str__(self) -> str:
-        return f"{self.text} -> {self.lexeme.text} ({self.helpset})"
+        return f"({self.helpset}) {self.text} -> {self.lexeme.text}"
 
     class Meta:
         ordering = ["text", "order"]
@@ -141,6 +141,17 @@ class Parsing(models.Model):
 
     word = models.ForeignKey(Word, models.CASCADE, related_name="parsings")
     content = models.CharField(max_length=200)
+
+    def __str__(self) -> str:
+        return f"({self.word}) {self.content}"
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["word", "content"],
+                name="parsing_unique_for_word",
+            )
+        ]
 
 
 # NOTE: There should be a limit of how many collections a user can make
