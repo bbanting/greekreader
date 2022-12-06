@@ -202,7 +202,7 @@ class Chapter(models.Model):
     order = models.IntegerField(validators=[not_negative])
     ordinal_text = models.CharField(max_length=50)
     title = models.CharField(max_length=100, blank=True, default="")
-    content = models.JSONField(blank=True, null=True)
+    content = models.TextField(blank=True, default="")
 
     def __str__(self) -> str:
         return f"{self.book.name}: {self.ordinal_text} ({self.order})"
