@@ -165,29 +165,6 @@ class Collection(models.Model):
     books = models.ManyToManyField("Book")
 
 
-class HelpSetAssignment(models.Model):
-    """Through table for Book and HelpSet to enable ordering. A helpset is
-    assigned to a book to enable vocabulary help. If a book has multiple
-    helpsets assigned to it, helpsets are accessed in order when a word is
-    looked up. For instance, if you have a text that generally aligns with
-    Koine Greek but with a few exceptions, you can make another helpset
-    and order it higher so to override the default Koine definition."""
-    book = models.ForeignKey("Book", models.CASCADE)
-    helpset = models.ForeignKey(HelpSet, models.CASCADE)
-    order = models.IntegerField()
-
-    def __str__(self) -> str:
-        return f"{self.helpset.name} -> {self.book} ({self.order})"
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["book", "helpset"],
-                name="book_helpset_unique",
-            ),
-        ]
-
-
 class Book(models.Model):
     """A book, divided into chapters."""
     date_created = models.DateField(auto_now_add=True)
@@ -197,12 +174,21 @@ class Book(models.Model):
 
     name = models.CharField(max_length=100, unique=True)
     cover_image = models.ForeignKey(HelpImage, models.SET_NULL, blank=True, null=True)
-    helpsets = models.ManyToManyField(HelpSet, through=HelpSetAssignment, blank=True)
+    helpset = models.ForeignKey(HelpSet, models.SET_NULL, blank=True, null=True)
+    fallback_helpset = models.ForeignKey(HelpSet, models.SET_NULL, blank=True, null=True)
     TIER_CHOICES = [(1, "One"), (2, "Two"), (3, "Three")]
     tier = models.IntegerField(choices=TIER_CHOICES, default=1)
 
     def __str__(self) -> str:
         return self.name
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["helpset", "fallback_helpset"],
+                name="helpset_not_same_as_fallback",
+            )
+        ]
 
 
 def not_negative(value:int) -> None:
