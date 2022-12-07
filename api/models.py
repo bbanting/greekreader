@@ -170,8 +170,8 @@ class Book(models.Model):
 
     name = models.CharField(max_length=100, unique=True)
     cover_image = models.ForeignKey(HelpImage, models.SET_NULL, blank=True, null=True)
-    helpset = models.ForeignKey(HelpSet, models.SET_NULL, blank=True, null=True)
-    fallback_helpset = models.ForeignKey(HelpSet, models.SET_NULL, blank=True, null=True)
+    helpset = models.ForeignKey(HelpSet, models.SET_NULL, blank=True, null=True, related_name="books")
+    fallback_helpset = models.ForeignKey(HelpSet, models.SET_NULL, blank=True, null=True, related_name="fallback_books")
     TIER_CHOICES = [(1, "One"), (2, "Two"), (3, "Three")]
     tier = models.IntegerField(choices=TIER_CHOICES, default=1)
 

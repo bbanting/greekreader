@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import (HelpSet, Lexeme, Word, Root, Book, Chapter, Collection, 
-HelpImage, HelpSetAssignment, StudyGroup, Membership)
+HelpImage, StudyGroup, Membership)
 
 
 class MembershipInline(admin.TabularInline):
@@ -14,14 +14,8 @@ class StudyGroupAdmin(admin.ModelAdmin):
     inlines = [MembershipInline]
 
 
-class HelpSetAssignmentInline(admin.TabularInline):
-    model = HelpSetAssignment
-    extra = 1
-
-
 class BookAdmin(admin.ModelAdmin):
     model = Book
-    inlines = [HelpSetAssignmentInline]
 
 
 admin.site.register(HelpSet)
