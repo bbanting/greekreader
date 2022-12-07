@@ -42,10 +42,6 @@ class HelpSet(models.Model):
     def __str__(self) -> str:
         return self.name
 
-    class Meta:
-        # This ordering is for the sake of Book resolving helpset order
-        ordering = ["helpsetassignment__order"]
-
 
 class Root(models.Model):
     """A lexical root. Used for grouping together related lexemes."""

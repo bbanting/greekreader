@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models import Lexeme, Word, Book, Collection, Chapter
+from ..models import Parsing, Book, Collection, Chapter
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -44,10 +44,17 @@ class LexemeSerializer(serializers.Serializer):
     help_images = HelpImageSerializer(many=True)
 
 
+class ParsingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Parsing
+        fields = ["content"]
+
+
 class WordSerializer(serializers.Serializer):
     text = serializers.CharField()
     lexeme = LexemeSerializer()
-    parse_data = serializers.CharField(allow_blank=True)
+    parsings = serializers.PrimaryKeyRelatedField(many=True, queryset=Parsing.objects.all())
+    order = serializers.IntegerField()
 
 
 class StudyGroupSerializer(serializers.Serializer):
