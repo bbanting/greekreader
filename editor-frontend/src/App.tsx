@@ -1,15 +1,14 @@
-import { useState } from 'react'
 import { MantineProvider } from '@mantine/core';
-import reactLogo from './assets/react.svg'
+
 
 function App() {
   return (
-    <MantineProvider>
+    <MantineProvider withNormalizeCSS withGlobalStyles>
       <div className="App">
-        App goes here.
+        Editor app goes here.
       </div>
     </MantineProvider>
-  )
+  );
 }
 
-export default App
+export default App;
