@@ -33,7 +33,7 @@ class RootDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class LexemeList(generics.ListCreateAPIView):
-    """List lexemes or create a lexeme book."""
+    """List lexemes or create a lexeme."""
     queryset = models.Lexeme.objects.all()
     serializer_class = serializers.LexemeSerializerAdmin
     permission_classes = [permissions.IsAdminUser]
@@ -45,6 +45,20 @@ class LexemeDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.LexemeSerializerAdmin
     permission_classes = [permissions.IsAdminUser]
     
+
+class HelpImageList(generics.ListCreateAPIView):
+    """List help images or create one."""
+    queryset = models.HelpImage.objects.all()
+    serializer_class = serializers.HelpImageSerializerAdmin
+    permission_classes = [permissions.IsAdminUser]
+    
+
+class HelpImageDetail(generics.RetrieveUpdateDestroyAPIView):
+    """View or modify a help image."""
+    queryset = models.HelpImage.objects.all()
+    serializer_class = serializers.HelpImageSerializerAdmin
+    permission_classes = [permissions.IsAdminUser]
+
 
 class WordList(generics.ListCreateAPIView):
     """List words or create a new word."""

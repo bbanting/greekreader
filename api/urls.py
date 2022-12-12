@@ -16,6 +16,8 @@ admin_only = [
     path("books/<int:pk>/", views.BookDetail.as_view(), name="book-detail"),
     path("chapters/", views.ChapterList.as_view(), name="list-chapters"),
     path("chapters/<int:pk>/", views.ChapterDetail.as_view(), name="chapter-detail"),
+    path("helpimages/", views.HelpImageList.as_view(), name="list-helpimages"),
+    path("helpimages/<int:pk>/", views.HelpImageDetail.as_view(), name="helpimage-detail"),
 ]
 
 urlpatterns = [
