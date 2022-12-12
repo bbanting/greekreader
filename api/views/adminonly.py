@@ -72,3 +72,17 @@ class BookDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Book.objects.all()
     serializer_class = serializers.BookSerializerAdmin
     permission_classes = [permissions.IsAdminUser]
+
+
+class ChapterList(generics.ListCreateAPIView):
+    """List chapters or create a new chapter."""
+    queryset = models.Chapter.objects.all()
+    serializer_class = serializers.ChapterSerializerAdmin
+    permission_classes = [permissions.IsAdminUser]
+
+
+class ChapterDetail(generics.RetrieveUpdateDestroyAPIView):
+    """View or modifiy one particular chapter."""
+    queryset = models.Chapter.objects.all()
+    serializer_class = serializers.ChapterSerializerAdmin
+    permission_classes = [permissions.IsAdminUser]

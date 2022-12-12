@@ -25,6 +25,9 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 class UserMayAccessBook(permissions.BasePermission):
     """Tells whether the user has access to view the book."""
     def has_object_permission(self, request, view, obj):
+        if type(obj) is models.Chapter:
+            obj = obj.book
+
         for x in request.user.studygroups.all():
             if obj in x.books.all():
                 return True
@@ -48,6 +51,14 @@ class BookView(generics.RetrieveAPIView):
     permission_classes = [UserMayAccessBook]
     serializer_class = serializers.BookSerializer
     queryset = models.Book.objects.all()
+    lookup_field = "pk"
+
+
+class ChapterView(generics.RetrieveAPIView):
+    """View one chapter."""
+    permission_classes = [UserMayAccessBook]
+    serializer_class = serializers.ChapterSerializer
+    queryset = models.Chapter.objects.all()
     lookup_field = "pk"
 
 
