@@ -100,3 +100,17 @@ class ChapterDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Chapter.objects.all()
     serializer_class = serializers.ChapterSerializerAdmin
     permission_classes = [permissions.IsAdminUser]
+
+
+class StudyGroupList(generics.ListCreateAPIView):
+    """List study groups or create a new one."""
+    queryset = models.StudyGroup.objects.all()
+    serializer_class = serializers.StudyGroupSerializerAdmin
+    permission_classes = [permissions.IsAdminUser]
+
+
+class StudyGroupDetail(generics.RetrieveUpdateDestroyAPIView):
+    """View or modifiy one particular study group."""
+    queryset = models.StudyGroup.objects.all()
+    serializer_class = serializers.StudyGroupSerializerAdmin
+    permission_classes = [permissions.IsAdminUser]

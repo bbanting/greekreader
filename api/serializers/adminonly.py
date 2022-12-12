@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models import HelpSet, Root, Lexeme, Word, Book, Collection, HelpImage, Chapter, Parsing
+from ..models import HelpSet, Root, Lexeme, Word, Book, Collection, HelpImage, Chapter, Parsing, StudyGroup
 
 
 class HelpSetSerializerAdmin(serializers.ModelSerializer):
@@ -61,3 +61,10 @@ class WordSerializerAdmin(serializers.ModelSerializer):
     class Meta:
         model = Word
         fields = "__all__"
+
+
+class StudyGroupSerializerAdmin(serializers.ModelSerializer):
+    class Meta:
+        model = StudyGroup
+        fields = "__all__"
+        
