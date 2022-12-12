@@ -96,8 +96,16 @@ class HelpImage(models.Model):
     """An image to be used as a vocabulary help. May be linked to
     multiple lexemes.
     """
+    date_created = models.DateField(auto_now_add=True)
+    creator = models.ForeignKey(Human, models.SET_NULL, null=True)
+    last_modified = models.DateTimeField(auto_now=True)
+    # last_modified_by = models.ForeignKey(Human, models.SET_NULL, null=True)
+
     title = models.CharField(max_length=100, unique=True)
     image = models.ImageField(upload_to=name_image_file)
+
+    def __str__(self) -> str:
+        return f"{self.title:.20}"
 
 
 class Word(models.Model):
