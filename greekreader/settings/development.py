@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "api.apps.ApiConfig",
     "accounts.apps.AccountsConfig",
+    "frontend.apps.FrontendConfig",
     "rest_framework",
 ]
 
@@ -48,9 +49,9 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, "editor-frontend/dist")
+            os.path.join(BASE_DIR, "frontend")
             ],
-        'APP_DIRS': False,
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -113,7 +114,8 @@ USE_TZ = True
 STATIC_URL = 'assets/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "editor-frontend/dist/assets/"),
+    os.path.join(BASE_DIR, "frontend/editor/dist/assets/"),
+    os.path.join(BASE_DIR, "frontend/reader/dist/assets/"),
 ]
 
 # Default primary key field type
