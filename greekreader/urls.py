@@ -13,5 +13,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/", include(api.urls)),
     path("editor/", frontend.views.EditorView.as_view()),
+    path("reader/", frontend.views.ReaderView.as_view()),
     path("", include(accounts.urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

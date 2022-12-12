@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
-    "@mantine/core": "^5.9.1",
-    "@mantine/hooks": "^5.9.1",
+    "@mantine/core": "^5.9.4",
+    "@mantine/hooks": "^5.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -27,10 +27,18 @@
   "eslintConfig": {
     "root": true,
     "parser": "@typescript-eslint/parser",
-    "plugins": ["@typescript-eslint"],
-    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended"
+    ],
     "rules": {
-      "semi": ["error", "always"]
+      "semi": [
+        "error",
+        "always"
+      ]
     }
   },
   "browserslist": {

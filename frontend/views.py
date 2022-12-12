@@ -16,3 +16,8 @@ class IsAdmin(permissions.BasePermission):
 class EditorView(TemplateView, PermissionRequiredMixin):
     http_method_names = ["get", "head", "options"]
     template_name = "editor/dist/index.html"
+
+
+class ReaderView(TemplateView, PermissionRequiredMixin):
+    http_method_names = ["get", "head", "options"]
+    template_name = "reader/dist/index.html"
