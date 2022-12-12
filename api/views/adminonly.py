@@ -63,7 +63,7 @@ class HelpImageDetail(generics.RetrieveUpdateDestroyAPIView):
 class WordList(generics.ListCreateAPIView):
     """List words or create a new word."""
     queryset = models.Word.objects.all()
-    serializer_class = serializers.WordSerializer
+    serializer_class = serializers.WordSerializerAdmin
     permission_classes = [permissions.IsAdminUser]
 
 
