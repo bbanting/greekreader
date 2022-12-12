@@ -23,7 +23,7 @@ class ChapterSerializerAdmin(serializers.ModelSerializer):
 
 class BookSerializerAdmin(serializers.ModelSerializer):
     chapters = serializers.PrimaryKeyRelatedField(many=True, queryset=Chapter.objects.all())
-
+    
     class Meta:
         model = Book
         fields = "__all__"
@@ -48,7 +48,7 @@ class ParsingSerializerAdmin(serializers.ModelSerializer):
 
 
 class LexemeSerializerAdmin(serializers.ModelSerializer):
-    help_images = HelpImageSerializerAdmin(many=True)
+    help_images = serializers.PrimaryKeyRelatedField(many=True, queryset=HelpImage.objects.all())
 
     class Meta:
         model = Lexeme
@@ -56,8 +56,8 @@ class LexemeSerializerAdmin(serializers.ModelSerializer):
 
 
 class WordSerializerAdmin(serializers.ModelSerializer):
-    parsings = ParsingSerializerAdmin(many=True)
-    
+    parsings = serializers.PrimaryKeyRelatedField(many=True, queryset=Parsing.objects.all())
+
     class Meta:
         model = Word
         fields = "__all__"

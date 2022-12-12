@@ -53,7 +53,7 @@ class ParsingSerializer(serializers.ModelSerializer):
 class WordSerializer(serializers.Serializer):
     text = serializers.CharField()
     lexeme = LexemeSerializer()
-    parsings = serializers.PrimaryKeyRelatedField(many=True, queryset=Parsing.objects.all())
+    parsings = ParsingSerializer(many=True)
     order = serializers.IntegerField()
 
 
