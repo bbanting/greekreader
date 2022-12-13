@@ -1,23 +1,16 @@
 from django.views.generic import TemplateView
-from django.contrib.auth.mixins import PermissionRequiredMixin
-
-from rest_framework import permissions
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 
-class IsAdmin(permissions.BasePermission):
-    """The user is an admin and logged in."""
-    def has_permission(self, request, view):
-        return bool(
-            request.user.is_staff and
-            request.user.is_authenticated
-        )
-
-
-class EditorView(TemplateView, PermissionRequiredMixin):
+class EditorView(TemplateView, UserPassesTestMixin):
     http_method_names = ["get", "head", "options"]
     template_name = "editor/dist/index.html"
 
+    def test_func(self) -> bool:
+        user = self.request.user
+        return user.is_authenticated and user.is_staff
 
-class ReaderView(TemplateView, PermissionRequiredMixin):
+
+class ReaderView(TemplateView):
     http_method_names = ["get", "head", "options"]
     template_name = "reader/dist/index.html"
