@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models import Parsing, Book, Collection, Chapter
+from ..models import Parsing, Book, Collection, Chapter, Human
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -59,5 +59,6 @@ class WordSerializer(serializers.Serializer):
 
 class StudyGroupSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=50)
-    shelf = BookSerializer(many=True)
+    users = serializers.PrimaryKeyRelatedField(many=True, queryset=Human.objects.all())
+    shelf = serializers.PrimaryKeyRelatedField(many=True, queryset=Book.objects.all())
     

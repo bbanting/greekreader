@@ -93,3 +93,19 @@ class WordHelp(generics.ListAPIView):
         words = self.get_queryset()
         serializer = self.serializer_class(words, many=True)
         return Response(serializer.data)
+
+
+class StudyGroupListView(generics.ListAPIView):
+    """Displays the list of study groups belonging to user."""
+    serializer_class = serializers.StudyGroupSerializer
+    queryset = models.StudyGroup.objects.all()
+    lookup_field = "pk"
+    http_method_names = ["get", "head", "options"]
+    
+
+class StudyGroupDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Displays a single study group."""
+    serializer_class = serializers.StudyGroupSerializer
+    queryset = models.StudyGroup.objects.all()
+    lookup_field = "pk"
+    http_method_names = ["get", "head", "options", "post", "put", "patch", "delete"]
