@@ -28,7 +28,7 @@ class Membership(models.Model):
     and StudyGroup.
     """
     studygroup = models.ForeignKey(StudyGroup, models.CASCADE)
-    user = models.ForeignKey(Human, models.CASCADE)
+    user = models.ForeignKey(Human, models.CASCADE, related_name="memberships")
     is_teacher = models.BooleanField(default=False)
 
 

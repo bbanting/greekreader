@@ -98,9 +98,13 @@ class WordHelp(generics.ListAPIView):
 class StudyGroupListView(generics.ListAPIView):
     """Displays the list of study groups belonging to user."""
     serializer_class = serializers.StudyGroupSerializer
-    queryset = models.StudyGroup.objects.all()
     lookup_field = "pk"
     http_method_names = ["get", "head", "options"]
+
+    def get_queryset(self):
+        """Get the studygroups for which user is a teacher."""
+        memberships = self.request.user.memberships.prefetch_related("studygroup").filter(is_teacher=True)
+        return [m.studygroup for m in memberships] if memberships else []
     
 
 class StudyGroupDetailView(generics.RetrieveUpdateDestroyAPIView):
