@@ -38,8 +38,8 @@ class UserMayAccessStudyGroup(permissions.BasePermission):
     """Tells whether the user has access to view and edit a study group."""
     def has_object_permission(self, request, view, obj):
         memberships = self.request.user.memberships.prefetch_related("studygroup").filter(is_teacher=True)
-        for x in memberships:
-            if obj == x.studygroup:
+        for m in memberships:
+            if obj == m.studygroup:
                 return True
         return False
 
@@ -119,6 +119,7 @@ class StudyGroupListView(generics.ListAPIView):
 
 class StudyGroupDetailView(generics.RetrieveUpdateDestroyAPIView):
     """Displays a single study group."""
+    permission_classes = [UserMayAccessStudyGroup]
     serializer_class = serializers.StudyGroupSerializer
     queryset = models.StudyGroup.objects.all()
     lookup_field = "pk"

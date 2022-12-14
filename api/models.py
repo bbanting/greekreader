@@ -31,6 +31,14 @@ class Membership(models.Model):
     user = models.ForeignKey(Human, models.CASCADE, related_name="memberships")
     is_teacher = models.BooleanField(default=False)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields = ["user", "studygroup"],
+                name = "unique_users_in_studygroup",
+            )
+        ]
+
 
 class HelpSet(models.Model):
     """A set of lexical helps."""
