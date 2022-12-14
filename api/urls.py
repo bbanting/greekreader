@@ -26,6 +26,6 @@ urlpatterns = [
     path("books/", views.LibraryView.as_view(), name="library"),
     path("books/<int:pk>/", views.BookView.as_view(), name="book-view"),
     path("chapters/<int:pk>/", views.ChapterView.as_view(), name="chapter-view"),
-    path("words/<int:bookid>/<text>/", views.WordHelp.as_view(), name="word-help"),
+    path("words/<int:bookid>/<text>/", views.HelpView.as_view(), name="word-help"),
     path("edit/", include(admin_only))
 ]

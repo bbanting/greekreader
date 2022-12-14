@@ -72,21 +72,24 @@ class ChapterView(generics.RetrieveAPIView):
     lookup_field = "pk"
 
 
-class WordHelp(generics.ListAPIView):
+class HelpView(generics.ListAPIView):
     """Displays help for a word form to the reader."""
     permission_classes = [UserMayAccessBook]
     serializer_class = serializers.WordSerializer
-    http_method_names = ["get", "head"]
+    http_method_names = ["get", "head", "options"]
 
     def get_queryset(self):
         """Search for the word in all relevant helpsets; return first match."""
-        helpsets = self.get_book(self.kwargs["bookid"]).helpsets.all()
+        book = self.get_book(self.kwargs["bookid"])
+        helpset, fallback = book.helpset, book.fallback_helpset
         word_text = urllib.parse.unquote(self.kwargs["text"])
 
-        for hs in helpsets:
-            if words := models.Word.objects.filter(text=word_text, helpset=hs):
-                return words
-        raise Http404()
+        if words := models.Word.objects.filter(text=word_text, helpset=helpset):
+            return words
+        elif words := models.Word.objects.filter(text=word_text, helpset=fallback):
+            return words
+        else:
+            raise Http404()
 
     def get_book(self, id) -> models.Book:
         """Return the book after checking if it exists and
