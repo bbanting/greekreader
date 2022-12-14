@@ -34,6 +34,16 @@ class UserMayAccessBook(permissions.BasePermission):
         return False
 
 
+class UserMayAccessStudyGroup(permissions.BasePermission):
+    """Tells whether the user has access to view and edit a study group."""
+    def has_object_permission(self, request, view, obj):
+        memberships = self.request.user.memberships.prefetch_related("studygroup").filter(is_teacher=True)
+        for x in memberships:
+            if obj == x.studygroup:
+                return True
+        return False
+
+
 class LibraryView(APIView):
     """List the books available to the user."""
     permission_classes = [permissions.IsAuthenticated]
@@ -104,7 +114,7 @@ class StudyGroupListView(generics.ListAPIView):
     def get_queryset(self):
         """Get the studygroups for which user is a teacher."""
         memberships = self.request.user.memberships.prefetch_related("studygroup").filter(is_teacher=True)
-        return [m.studygroup for m in memberships] if memberships else []
+        return [m.studygroup for m in memberships]
     
 
 class StudyGroupDetailView(generics.RetrieveUpdateDestroyAPIView):
