@@ -51,6 +51,14 @@ class HelpSet(models.Model):
         return self.name
 
 
+class HelpSetSettings(models.Model):
+    """A model for the settings for a helpset."""
+    last_modified = models.DateTimeField(auto_now=True)
+    helpset = models.OneToOneField(HelpSet, models.CASCADE, related_name="settings")
+    
+    parsings_label = models.CharField(max_length=20)
+
+
 class Root(models.Model):
     """A lexical root. Used for grouping together related lexemes."""
     date_created = models.DateField(auto_now_add=True)
