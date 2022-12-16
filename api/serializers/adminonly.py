@@ -1,11 +1,21 @@
 from rest_framework import serializers
 
-from ..models import HelpSet, Root, Lexeme, Word, Book, Collection, HelpImage, Chapter, Parsing, StudyGroup
+from ..models import (HelpSet, Root, Lexeme, Word, 
+                    Book, Collection, HelpImage, 
+                    Chapter, Parsing, StudyGroup, HelpSetSettings)
 
 
 class HelpSetSerializerAdmin(serializers.ModelSerializer):
+    settings = serializers.PrimaryKeyRelatedField(queryset=HelpSetSettings.objects.all())
+
     class Meta:
         model = HelpSet
+        fields = "__all__"
+
+
+class HelpSetSettingsSerializerAdmin(serializers.ModelSerializer):
+    class Meta:
+        model = HelpSetSettings
         fields = "__all__"
 
 

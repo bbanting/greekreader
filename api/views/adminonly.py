@@ -33,3 +33,4 @@ WordList, WordDetail = admin_view_factory(models.Word, serializers.WordSerialize
 BookList, BookDetail = admin_view_factory(models.Book, serializers.BookSerializerAdmin)
 ChapterList, ChapterDetail = admin_view_factory(models.Chapter, serializers.ChapterSerializerAdmin)
 StudyGroupList, StudyGroupDetail = admin_view_factory(models.StudyGroup, serializers.StudyGroupSerializerAdmin)
+_, HelpSetSettingsDetail = admin_view_factory(models.HelpSetSettings, serializers.HelpSetSettingsSerializerAdmin)

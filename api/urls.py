@@ -6,6 +6,7 @@ from . import views
 admin_only = [
     path("helpsets/", views.HelpSetList.as_view(), name="list-create-helpset"),
     path("helpsets/<int:pk>/", views.HelpSetDetail.as_view(), name="helpset-detail"),
+    path("helpsetsettings/<int:pk>/", views.HelpSetSettingsDetail.as_view(), name="helpset-settings-detail"),
     path("roots/", views.RootList.as_view(), name="list-roots"),
     path("roots/<int:pk>/", views.RootDetail.as_view(), name="root-detail"),
     path("lexemes/", views.LexemeList.as_view(), name="list-lexemes"),
