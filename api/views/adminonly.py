@@ -8,7 +8,7 @@ def admin_view_factory(model, serializer) -> tuple[ListCreateAPIView, RetrieveUp
     attrs = {
         "queryset": model.objects.all(),
         "serializer_class": serializer,
-        "permission_classes": [permissions.IsAdminUser],
+        # "permission_classes": [permissions.IsAdminUser],
         }
 
     return (

@@ -20,8 +20,9 @@ export function AssetSelector() {
 
     useEffect(() => {
       fetch("http://localhost:8000/api/edit/books/")
-      .then(res => res.json())
-      .then(data => setBooks(data));
+      .then(res => {console.log(res); return res.json();})
+      .then(data => setBooks(data))
+      .catch((error) => console.log(error));
     }, [])
 
     return (
