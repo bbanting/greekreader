@@ -10,17 +10,18 @@ def admin_view_factory(model, serializer) -> tuple[ListCreateAPIView, RetrieveUp
         "serializer_class": serializer,
         # "permission_classes": [permissions.IsAdminUser],
         }
+    model_name = model.__name__
 
     return (
         type(
-            f"{model.__name__}List", 
+            f"{model_name}List", 
             (ListCreateAPIView,), 
-            {**attrs, "__doc__": f"List current {model}s or create a new one."}
+            {**attrs, "__doc__": f"List current {model_name}s or create a new one."}
         ),
         type(
-            f"{model.__name__}Detail", 
+            f"{model_name}Detail", 
             (RetrieveUpdateDestroyAPIView,), 
-            {**attrs, "__doc__": f"View or modify a {model}."}
+            {**attrs, "__doc__": f"View or modify a {model_name}."}
         ),
     )
 
