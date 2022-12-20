@@ -7,6 +7,15 @@ from django.core.exceptions import ValidationError
 from accounts.models import Human
 
 
+def not_negative(value:int) -> None:
+    """Check if a number value is negative."""
+    if value < 0:
+        raise ValidationError(
+            "The number may not be negative", 
+            params={"value": value}
+            )
+
+
 class StudyGroup(models.Model):
     """A group of students with at least one teacher."""
     date_created = models.DateField(auto_now_add=True)
@@ -137,14 +146,14 @@ class Word(models.Model):
     helpset = models.ForeignKey(HelpSet, models.CASCADE, related_name="words")
     text = models.CharField(max_length=100)
     lexeme = models.ForeignKey(Lexeme, models.CASCADE, related_name="words")
-    order = models.IntegerField(blank=True, default=0)
+    order = models.IntegerField(blank=True, default=0, validators=[not_negative])
     # parsings 
 
     def __str__(self) -> str:
         return f"({self.helpset}) {self.text} -> {self.lexeme.text}"
 
     class Meta:
-        ordering = ["text", "order"]
+        ordering = ["order", "-date_created"]
         constraints = [
             models.UniqueConstraint(
                 fields=["text", "lexeme"],
@@ -211,15 +220,6 @@ class Book(models.Model):
         ]
 
 
-def not_negative(value:int) -> None:
-    """Check if a number value is negative."""
-    if value < 0:
-        raise ValidationError(
-            "The number may not be negative", 
-            params={"value": value}
-            )
-
-
 class Chapter(models.Model):
     """A chapter in a book."""
     date_created = models.DateField(auto_now_add=True)
@@ -227,7 +227,7 @@ class Chapter(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     book = models.ForeignKey(Book, models.CASCADE, related_name="chapters")
-    order = models.IntegerField(validators=[not_negative])
+    order = models.IntegerField(blank=True, default=0, validators=[not_negative])
     ordinal_text = models.CharField(max_length=50)
     title = models.CharField(max_length=100, blank=True, default="")
     content = models.TextField(blank=True, default="")
@@ -236,7 +236,7 @@ class Chapter(models.Model):
         return f"{self.book.name}: {self.ordinal_text} ({self.order})"
 
     class Meta:
-        ordering = ["order"]
+        ordering = ["order", "-date_created"]
         constraints = [
             models.UniqueConstraint(
                 fields=["book", "order"],
