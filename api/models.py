@@ -168,16 +168,16 @@ class Parsing(models.Model):
     creator = models.ForeignKey(Human, models.SET_NULL, null=True)
     last_modified = models.DateTimeField(auto_now=True)
 
-    word = models.ForeignKey(WordLink, models.CASCADE, related_name="parsings")
+    wordlink = models.ForeignKey(WordLink, models.CASCADE, related_name="parsings")
     content = models.CharField(max_length=200)
 
     def __str__(self) -> str:
-        return f"({self.word}) {self.content}"
+        return f"({self.wordlink}) {self.content}"
     
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["word", "content"],
+                fields=["wordlink", "content"],
                 name="parsing_unique_for_word",
             )
         ]

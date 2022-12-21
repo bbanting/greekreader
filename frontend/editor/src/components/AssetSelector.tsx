@@ -7,7 +7,7 @@ interface Book {
   chapters: number[],
   date_created: string,
   last_modified: string,
-  name: string,
+  title: string,
   tier: number,
   creator: number,
   cover_image: number | null,
@@ -50,7 +50,7 @@ export function AssetSelector() {
           </Accordion.Control>
           <Accordion.Panel>
             <ul>
-              {books?.map(b => <li>{b.name}</li>)}
+              {books?.map(b => <li>{b.title}</li>)}
             </ul>
           </Accordion.Panel>
         </Accordion.Item>
