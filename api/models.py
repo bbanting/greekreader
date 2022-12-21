@@ -207,6 +207,7 @@ class Book(models.Model):
     fallback_helpset = models.ForeignKey(HelpSet, models.SET_NULL, blank=True, null=True, related_name="fallback_books")
     TIER_CHOICES = [(1, "One"), (2, "Two"), (3, "Three")]
     tier = models.IntegerField(choices=TIER_CHOICES, default=1)
+    group = models.CharField(max_length=25, blank=True, null=True)
 
     def __str__(self) -> str:
         return self.name
