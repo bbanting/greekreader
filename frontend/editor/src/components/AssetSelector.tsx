@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Accordion, Button } from "@mantine/core";
 
 
-interface Book {
+export interface Book {
   id: number,
   chapters: number[],
   date_created: string,
@@ -15,7 +15,7 @@ interface Book {
   fallback_helpset: number | null
 }
 
-interface HelpSet {
+export interface HelpSet {
   id: number,
   settings: number | null,
   date_created: string,

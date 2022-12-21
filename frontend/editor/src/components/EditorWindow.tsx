@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Text, Container } from "@mantine/core";
 
+import { Toolbar } from "./Toolbar";
+import { HelpSet, Book } from "./AssetSelector";
+
 
 interface EditorWindowProps {
   assetID: number | null, 
@@ -9,23 +12,23 @@ interface EditorWindowProps {
 
 
 export function EditorWindow({assetID, assetType}: EditorWindowProps) {
-  const [assetVal, setAssetVal] = useState<string | null>(null);
+  const [assetVal, setAssetVal] = useState<Book & HelpSet | null>(null);
 
   useEffect(() => {
     if (assetID === null) return;
     fetch(`http://localhost:8000/api/edit/${assetType}/${assetID}/`)
       .then(res => res.json())
       .then(data => {
-        assetType === "books" ? setAssetVal(data.title) : setAssetVal(data.name);
+        setAssetVal(data);
       })
       .catch((error) => console.log(error));
   }, [assetID])
 
   return (
     <Container>
-      <Text sx={{textAlign: "center"}}>Toolbar goes here.</Text>
+      <Toolbar asset={assetVal} />
       {!assetID && <Text>Please select an asset to edit.</Text>}
-      {assetID && <Text>{assetVal} is selected.</Text>}
+      {assetID && <Text>{assetVal && (assetVal.title ? assetVal.title : assetVal.name)}</Text>}
     </Container>
   )
 }
