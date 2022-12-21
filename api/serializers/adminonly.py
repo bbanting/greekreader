@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models import (HelpSet, Root, Lexeme, Word, 
+from ..models import (HelpSet, Root, Lexeme, WordLink, 
                     Book, Collection, HelpImage, 
                     Chapter, Parsing, StudyGroup, HelpSetSettings)
 
@@ -69,7 +69,7 @@ class WordSerializerAdmin(serializers.ModelSerializer):
     parsings = serializers.PrimaryKeyRelatedField(many=True, queryset=Parsing.objects.all())
 
     class Meta:
-        model = Word
+        model = WordLink
         fields = "__all__"
 
 

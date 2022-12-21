@@ -84,9 +84,9 @@ class HelpView(generics.ListAPIView):
         helpset, fallback = book.helpset, book.fallback_helpset
         word_text = urllib.parse.unquote(self.kwargs["text"])
 
-        if words := models.Word.objects.filter(text=word_text, helpset=helpset):
+        if words := models.WordLink.objects.filter(text=word_text, helpset=helpset):
             return words
-        elif words := models.Word.objects.filter(text=word_text, helpset=fallback):
+        elif words := models.WordLink.objects.filter(text=word_text, helpset=fallback):
             return words
         else:
             raise Http404()

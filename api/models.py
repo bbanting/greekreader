@@ -133,7 +133,7 @@ class HelpImage(models.Model):
         return f"{self.title:.20}"
 
 
-class Word(models.Model):
+class WordLink(models.Model):
     """A link between a concrete word form and the lexeme it is derived from.
     Distinct lexemes may have forms that are morphologically identical and
     so multiple Words may have the same text but point to different lexemes.
@@ -168,7 +168,7 @@ class Parsing(models.Model):
     creator = models.ForeignKey(Human, models.SET_NULL, null=True)
     last_modified = models.DateTimeField(auto_now=True)
 
-    word = models.ForeignKey(Word, models.CASCADE, related_name="parsings")
+    word = models.ForeignKey(WordLink, models.CASCADE, related_name="parsings")
     content = models.CharField(max_length=200)
 
     def __str__(self) -> str:
@@ -201,7 +201,7 @@ class Book(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
     # last_modified_by = models.ForeignKey(Human, models.SET_NULL, null=True)
 
-    name = models.CharField(max_length=100, unique=True)
+    title = models.CharField(max_length=100, unique=True)
     cover_image = models.ForeignKey(HelpImage, models.SET_NULL, blank=True, null=True)
     helpset = models.ForeignKey(HelpSet, models.SET_NULL, blank=True, null=True, related_name="books")
     fallback_helpset = models.ForeignKey(HelpSet, models.SET_NULL, blank=True, null=True, related_name="fallback_books")

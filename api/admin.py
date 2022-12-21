@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import (HelpSet, Lexeme, Word, Root, Book, Chapter, Collection, 
+from .models import (HelpSet, Lexeme, WordLink, Root, Book, Chapter, Collection, 
 HelpImage, StudyGroup, Membership)
 
 
@@ -21,7 +21,7 @@ class BookAdmin(admin.ModelAdmin):
 admin.site.register(HelpSet)
 admin.site.register(Root)
 admin.site.register(Lexeme)
-admin.site.register(Word)
+admin.site.register(WordLink)
 admin.site.register(HelpImage)
 admin.site.register(Collection)
 admin.site.register(Book, BookAdmin)
