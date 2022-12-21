@@ -7,7 +7,7 @@ import { EditorWindow } from "./EditorWindow";
 
 function App() {
   const [assetType, setAssetType] = useState<"books" | "helpsets">("books");
-  const [asset, setAsset] = useState<number | null>(null);
+  const [assetID, setAssetID] = useState<number | null>(null);
 
   return (
     <MantineProvider withNormalizeCSS withGlobalStyles>
@@ -16,11 +16,11 @@ function App() {
           padding={0} 
           navbar={
             <Navbar width={{base: 300}}>
-              <AssetSelector setAsset={setAsset} setAssetType={setAssetType}/>
+              <AssetSelector setAssetID={setAssetID} setAssetType={setAssetType}/>
             </Navbar>}
           header={<Header height={50} p="xs">Header placeholder</Header>}
         >
-          <EditorWindow asset={asset} assetType={assetType} />
+          <EditorWindow assetID={assetID} assetType={assetType} />
         </AppShell>
       </div>
     </MantineProvider>

@@ -25,12 +25,12 @@ interface HelpSet {
 }
 
 interface AssetSelectorProps {
-  setAsset: (x: number | null) => void,
+  setAssetID: (x: number | null) => void,
   setAssetType: (x: "books" | "helpsets") => void
 }
 
 
-export function AssetSelector({setAsset, setAssetType}: AssetSelectorProps) {
+export function AssetSelector({setAssetID, setAssetType}: AssetSelectorProps) {
   /**A component to select which asset to edit. */
     const [books, setBooks] = useState<Book[] | null>(null);
     const [helpSets, setHelpSets] = useState<HelpSet[] | null>(null);
@@ -57,7 +57,7 @@ export function AssetSelector({setAsset, setAssetType}: AssetSelectorProps) {
             {books?.map(b => 
               <Button key={b.id} fullWidth variant="subtle" onClick={() => {
                 setAssetType("books");
-                setAsset(b.id);
+                setAssetID(b.id);
               }}>{b.title}</Button>
             )}
           </Accordion.Panel>
@@ -70,7 +70,7 @@ export function AssetSelector({setAsset, setAssetType}: AssetSelectorProps) {
             {helpSets?.map(hs => 
               <Button key={hs.id} fullWidth variant="subtle" onClick={() => {
                 setAssetType("helpsets");
-                setAsset(hs.id);
+                setAssetID(hs.id);
               }}>{hs.name}</Button>
             )}
           </Accordion.Panel>
