@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Text, Container } from "@mantine/core";
 
 import { Toolbar } from "./Toolbar";
-import { HelpSet, Book } from "./AssetSelector";
+import { HelpSet, Book } from "../api-types";
 
 
 interface EditorWindowProps {

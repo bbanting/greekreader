@@ -1,6 +1,6 @@
 import { Text } from "@mantine/core";
 
-import { Book, HelpSet } from "./AssetSelector";
+import { Book, HelpSet } from "../api-types";
 
 
 interface ToolbarProps {
