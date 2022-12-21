@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Accordion } from "@mantine/core";
 
 
 interface Book {
@@ -14,6 +15,7 @@ interface Book {
   fallback_helpset: number | null
 }
 
+
 export function AssetSelector() {
   /**A component to select which asset to edit. */
     const [books, setBooks] = useState<Book[] | null>(null);
@@ -26,8 +28,27 @@ export function AssetSelector() {
     }, [])
 
     return (
-      <ul>
-        {books?.map(b => (<li key={b.id}>{b.name}</li>))}
-      </ul>
+      <Accordion variant="filled" defaultValue={"books"}>
+        <Accordion.Item value="books">
+          <Accordion.Control>
+            Books
+          </Accordion.Control>
+          <Accordion.Panel>
+            <ul>
+              {books?.map(b => <li>{b.name}</li>)}
+            </ul>
+          </Accordion.Panel>
+        </Accordion.Item>
+        <Accordion.Item value="helpsets">
+          <Accordion.Control>
+            Help Sets
+          </Accordion.Control>
+          <Accordion.Panel>
+            <ul>
+              <li>Placeholder</li>
+            </ul>
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
     )
 }
