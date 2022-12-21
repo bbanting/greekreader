@@ -14,7 +14,10 @@ function App() {
       <div className="App">
         <AppShell 
           padding={0} 
-          navbar={<Navbar width={{base: 300}}><AssetSelector/></Navbar>}
+          navbar={
+            <Navbar width={{base: 300}}>
+              <AssetSelector setAsset={setAsset} setAssetType={setAssetType}/>
+            </Navbar>}
           header={<Header height={50} p="xs">Header placeholder</Header>}
         >
           <EditorWindow asset={asset} assetType={assetType} />

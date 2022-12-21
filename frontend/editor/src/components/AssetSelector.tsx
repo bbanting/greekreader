@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Accordion } from "@mantine/core";
+import { Accordion, Button } from "@mantine/core";
 
 
 interface Book {
@@ -24,8 +24,13 @@ interface HelpSet {
   creator: number
 }
 
+interface AssetSelectorProps {
+  setAsset: (x: number | null) => void,
+  setAssetType: (x: "book" | "helpset") => void
+}
 
-export function AssetSelector() {
+
+export function AssetSelector({setAsset, setAssetType}: AssetSelectorProps) {
   /**A component to select which asset to edit. */
     const [books, setBooks] = useState<Book[] | null>(null);
     const [helpSets, setHelpSets] = useState<HelpSet[] | null>(null);
@@ -49,9 +54,12 @@ export function AssetSelector() {
             Books
           </Accordion.Control>
           <Accordion.Panel>
-            <ul>
-              {books?.map(b => <li>{b.title}</li>)}
-            </ul>
+            {books?.map(b => 
+              <Button fullWidth variant="subtle" onClick={() => {
+                setAssetType("book");
+                setAsset(b.id);
+              }}>{b.title}</Button>
+            )}
           </Accordion.Panel>
         </Accordion.Item>
         <Accordion.Item value="helpsets">
@@ -59,9 +67,12 @@ export function AssetSelector() {
             Help Sets
           </Accordion.Control>
           <Accordion.Panel>
-            <ul>
-              {helpSets?.map(hs => <li>{hs.name}</li>)}
-            </ul>
+            {helpSets?.map(hs => 
+              <Button fullWidth variant="subtle" onClick={() => {
+                setAssetType("helpset");
+                setAsset(hs.id);
+              }}>{hs.name}</Button>
+            )}
           </Accordion.Panel>
         </Accordion.Item>
       </Accordion>
