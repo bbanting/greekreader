@@ -6,7 +6,7 @@ import { EditorWindow } from "./EditorWindow";
 
 
 function App() {
-  const [assetType, setAssetType] = useState<"book" | "helpset">("book");
+  const [assetType, setAssetType] = useState<"books" | "helpsets">("books");
   const [asset, setAsset] = useState<number | null>(null);
 
   return (

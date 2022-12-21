@@ -26,7 +26,7 @@ interface HelpSet {
 
 interface AssetSelectorProps {
   setAsset: (x: number | null) => void,
-  setAssetType: (x: "book" | "helpset") => void
+  setAssetType: (x: "books" | "helpsets") => void
 }
 
 
@@ -37,12 +37,12 @@ export function AssetSelector({setAsset, setAssetType}: AssetSelectorProps) {
 
     useEffect(() => {
       fetch("http://localhost:8000/api/edit/books/")
-      .then(res => {console.log(res); return res.json();})
+      .then(res => res.json())
       .then(data => setBooks(data))
       .catch((error) => console.log(error));
 
       fetch("http://localhost:8000/api/edit/helpsets/")
-      .then(res => {console.log(res); return res.json();})
+      .then(res => res.json())
       .then(data => setHelpSets(data))
       .catch((error) => console.log(error));
     }, [])
@@ -55,8 +55,8 @@ export function AssetSelector({setAsset, setAssetType}: AssetSelectorProps) {
           </Accordion.Control>
           <Accordion.Panel>
             {books?.map(b => 
-              <Button fullWidth variant="subtle" onClick={() => {
-                setAssetType("book");
+              <Button key={b.id} fullWidth variant="subtle" onClick={() => {
+                setAssetType("books");
                 setAsset(b.id);
               }}>{b.title}</Button>
             )}
@@ -68,8 +68,8 @@ export function AssetSelector({setAsset, setAssetType}: AssetSelectorProps) {
           </Accordion.Control>
           <Accordion.Panel>
             {helpSets?.map(hs => 
-              <Button fullWidth variant="subtle" onClick={() => {
-                setAssetType("helpset");
+              <Button key={hs.id} fullWidth variant="subtle" onClick={() => {
+                setAssetType("helpsets");
                 setAsset(hs.id);
               }}>{hs.name}</Button>
             )}
