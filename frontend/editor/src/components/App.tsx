@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { MantineProvider, AppShell, Header, Navbar, Text } from '@mantine/core';
+import { MantineProvider, AppShell, Header, Navbar } from '@mantine/core';
+import { QueryClientProvider, QueryClient  } from "@tanstack/react-query";
 
 import { AssetSelector } from './AssetSelector';
 import { EditorWindow } from "./EditorWindow";
@@ -9,7 +10,10 @@ function App() {
   const [assetType, setAssetType] = useState<"books" | "helpsets">("books");
   const [assetID, setAssetID] = useState<number | null>(null);
 
+  const queryClient = new QueryClient();
+
   return (
+    <QueryClientProvider client={queryClient}>
     <MantineProvider withNormalizeCSS withGlobalStyles>
       <div className="App">
         <AppShell 
@@ -24,6 +28,7 @@ function App() {
         </AppShell>
       </div>
     </MantineProvider>
+    </QueryClientProvider>
   );
 }
 
