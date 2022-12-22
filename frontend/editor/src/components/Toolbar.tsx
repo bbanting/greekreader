@@ -1,15 +1,15 @@
-import { Text } from "@mantine/core";
-
-import { Book, HelpSet } from "../api-types";
+import { ReactNode } from "react";
 
 
 interface ToolbarProps {
-  asset: Book | HelpSet | null
+  children: ReactNode
 }
 
 /**A generic toolbar component for any given editor. */
 export function Toolbar(props: ToolbarProps) {
   return (
-    <Text sx={{textAlign: "center"}}>Toolbar goes here</Text>
+    <div>
+      {props.children}
+    </div>
   )
 }

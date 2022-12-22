@@ -2,6 +2,7 @@ import { Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 
 import { HelpSet } from "../api-types";
+import { Toolbar } from "./Toolbar";
 import { getSingleBook, getSingleHelpset } from "../api-tools";
 
 
@@ -18,6 +19,12 @@ export function HelpsetEditor({ id }:HelpsetEditorProps) {
   });
 
   return (
-    <Text>{helpsetQuery?.data?.name}</Text>
+    <>
+      <Toolbar>
+        <Text sx={{textAlign: "center"}}>Toolbar item placeholder...</Text>
+      </Toolbar>
+
+      <Text>{helpsetQuery?.data?.name}</Text>
+    </>
   )
 }
