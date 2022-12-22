@@ -7,25 +7,29 @@ import { EditorWindow } from "./EditorWindow";
 
 
 function App() {
-  const [assetType, setAssetType] = useState<"books" | "helpsets">("books");
+  const [assetType, setAssetType] = useState<"book" | "helpset">("book");
   const [assetID, setAssetID] = useState<number>(0);
 
   const queryClient = new QueryClient();
+
+  const appShell = 
+  <AppShell 
+    padding={0} 
+    navbar={
+      <Navbar width={{base: 300}}>
+        <AssetSelector setAssetID={setAssetID} setAssetType={setAssetType}/>
+      </Navbar>
+    }
+    header={<Header height={50} p="xs">Header placeholder</Header>}
+  >
+    <EditorWindow assetID={assetID} assetType={assetType} />
+  </AppShell>
 
   return (
     <QueryClientProvider client={queryClient}>
     <MantineProvider withNormalizeCSS withGlobalStyles>
       <div className="App">
-        <AppShell 
-          padding={0} 
-          navbar={
-            <Navbar width={{base: 300}}>
-              <AssetSelector setAssetID={setAssetID} setAssetType={setAssetType}/>
-            </Navbar>}
-          header={<Header height={50} p="xs">Header placeholder</Header>}
-        >
-          <EditorWindow assetID={assetID} assetType={assetType} />
-        </AppShell>
+        {appShell}
       </div>
     </MantineProvider>
     </QueryClientProvider>

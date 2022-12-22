@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Text, Container } from "@mantine/core";
-import { useQuery } from "@tanstack/react-query";
 
 import { BookEditor } from "./BookEditor";
 import { HelpsetEditor } from "./HelpsetEditor";
@@ -8,14 +7,14 @@ import { HelpsetEditor } from "./HelpsetEditor";
 
 interface EditorWindowProps {
   assetID: number, 
-  assetType: "books" | "helpsets"
+  assetType: "book" | "helpset"
 }
 
 
 export function EditorWindow({assetID, assetType}: EditorWindowProps) {
   let editor;
   if (assetID) {
-    editor = (assetType === "books") 
+    editor = (assetType === "book") 
       ? <BookEditor id={assetID} /> 
       : <HelpsetEditor id={assetID} />
   } else {

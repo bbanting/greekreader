@@ -7,7 +7,7 @@ import { getBooks, getHelpsets } from "../api-tools";
 
 interface AssetSelectorProps {
   setAssetID: (x: number) => void,
-  setAssetType: (x: "books" | "helpsets") => void
+  setAssetType: (x: "book" | "helpset") => void
 }
 
 
@@ -25,7 +25,7 @@ export function AssetSelector({setAssetID, setAssetType}: AssetSelectorProps) {
         <Accordion.Panel>
           {booksQuery.data?.map(b => 
             <Button key={b.id} fullWidth variant="subtle" onClick={() => {
-              setAssetType("books");
+              setAssetType("book");
               setAssetID(b.id);
             }}>{b.title}</Button>
           )}
@@ -38,7 +38,7 @@ export function AssetSelector({setAssetID, setAssetType}: AssetSelectorProps) {
         <Accordion.Panel>
           {helpsetsQuery.data?.map(hs => 
             <Button key={hs.id} fullWidth variant="subtle" onClick={() => {
-              setAssetType("helpsets");
+              setAssetType("helpset");
               setAssetID(hs.id);
             }}>{hs.name}</Button>
           )}
