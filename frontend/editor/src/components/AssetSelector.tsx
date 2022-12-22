@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Accordion, Button } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 
-import { Book, HelpSet } from "../api-types";
+import { getBooks, getHelpsets } from "../api-tools";
 
 
 interface AssetSelectorProps {
@@ -11,20 +11,8 @@ interface AssetSelectorProps {
 }
 
 
-async function getBooks(): Promise<Book[]> {
-  const res = await fetch("http://localhost:8000/api/edit/books/");
-  return await res.json();
-}
-
-async function getHelpsets(): Promise<HelpSet[]> {
-  const res = await fetch("http://localhost:8000/api/edit/helpsets/");
-  return await res.json();
-}
-
-
 export function AssetSelector({setAssetID, setAssetType}: AssetSelectorProps) {
   /**A component to select which asset to edit. */
-
   const booksQuery = useQuery({queryKey: ["books"], queryFn: getBooks})
   const helpsetsQuery = useQuery({queryKey: ["helpsets"], queryFn: getHelpsets})
 
