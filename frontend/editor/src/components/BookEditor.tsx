@@ -9,7 +9,7 @@ interface BookEditorProps {
   id: number
 }
 
-
+/**The editor component for book objects. */
 export function BookEditor({ id }: BookEditorProps) {
   const bookQuery = useQuery({
     queryKey: ["book", id], 

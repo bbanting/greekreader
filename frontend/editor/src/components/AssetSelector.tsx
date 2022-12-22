@@ -11,8 +11,8 @@ interface AssetSelectorProps {
 }
 
 
+/**A component to select which asset to edit. */
 export function AssetSelector({setAssetID, setAssetType}: AssetSelectorProps) {
-  /**A component to select which asset to edit. */
   const booksQuery = useQuery({queryKey: ["books"], queryFn: getBooks});
   const helpsetsQuery = useQuery({queryKey: ["helpsets"], queryFn: getHelpsets});
 

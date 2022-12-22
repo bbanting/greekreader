@@ -10,6 +10,7 @@ interface HelpsetEditorProps {
 }
 
 
+/**The editor component for help set objects. */
 export function HelpsetEditor({ id }:HelpsetEditorProps) {
   const helpsetQuery = useQuery({
     queryKey: ["helpset", id], 

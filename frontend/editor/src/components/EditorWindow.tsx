@@ -11,6 +11,7 @@ interface EditorWindowProps {
 }
 
 
+/**Container component for the active editor. */
 export function EditorWindow({assetID, assetType}: EditorWindowProps) {
   let editor;
   if (assetID) {
