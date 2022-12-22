@@ -1,15 +1,22 @@
 import { Text } from "@mantine/core";
+import { useQuery } from "@tanstack/react-query";
 
 import { Book } from "../api-types";
+import { getSingleBook, getSingleHelpset } from "../api-tools";
 
 
 interface BookEditorProps {
-  book: Book
+  id: number
 }
 
 
-export function BookEditor({ book }: BookEditorProps) {
+export function BookEditor({ id }: BookEditorProps) {
+  const bookQuery = useQuery({
+    queryKey: ["book", id], 
+    queryFn: () => getSingleBook(id)
+  });
+
   return (
-    <Text>{book.title}</Text>
+    <Text>{bookQuery.data?.title}</Text>
   )
 }
