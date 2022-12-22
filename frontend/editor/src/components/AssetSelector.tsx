@@ -6,15 +6,15 @@ import { getBooks, getHelpsets } from "../api-tools";
 
 
 interface AssetSelectorProps {
-  setAssetID: (x: number | null) => void,
+  setAssetID: (x: number) => void,
   setAssetType: (x: "books" | "helpsets") => void
 }
 
 
 export function AssetSelector({setAssetID, setAssetType}: AssetSelectorProps) {
   /**A component to select which asset to edit. */
-  const booksQuery = useQuery({queryKey: ["books"], queryFn: getBooks})
-  const helpsetsQuery = useQuery({queryKey: ["helpsets"], queryFn: getHelpsets})
+  const booksQuery = useQuery({queryKey: ["books"], queryFn: getBooks});
+  const helpsetsQuery = useQuery({queryKey: ["helpsets"], queryFn: getHelpsets});
 
   return (
     <Accordion variant="filled" defaultValue={"books"}>
@@ -45,5 +45,5 @@ export function AssetSelector({setAssetID, setAssetType}: AssetSelectorProps) {
         </Accordion.Panel>
       </Accordion.Item>
     </Accordion>
-  )
+  );
 }

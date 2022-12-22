@@ -8,7 +8,7 @@ import { EditorWindow } from "./EditorWindow";
 
 function App() {
   const [assetType, setAssetType] = useState<"books" | "helpsets">("books");
-  const [assetID, setAssetID] = useState<number | null>(null);
+  const [assetID, setAssetID] = useState<number>(0);
 
   const queryClient = new QueryClient();
 

@@ -4,32 +4,34 @@ import { useQuery } from "@tanstack/react-query";
 
 import { Toolbar } from "./Toolbar";
 import { HelpSet, Book } from "../api-types";
+import { getSingleBook, getSingleHelpset } from "../api-tools";
 
 
 interface EditorWindowProps {
-  assetID: number | null, 
+  assetID: number, 
   assetType: "books" | "helpsets"
 }
 
 
 export function EditorWindow({assetID, assetType}: EditorWindowProps) {
-  const [assetVal, setAssetVal] = useState<Book & HelpSet | null>(null);
+  const bookQuery = useQuery({
+    queryKey: ["book"], 
+    queryFn: () => getSingleBook(assetID), 
+    enabled: assetType === "books" && assetID > 0
+  });
 
-  useEffect(() => {
-    if (assetID === null) return;
-    fetch(`http://localhost:8000/api/edit/${assetType}/${assetID}/`)
-      .then(res => res.json())
-      .then(data => {
-        setAssetVal(data);
-      })
-      .catch((error) => console.log(error));
-  }, [assetID])
+  const helpsetQuery = useQuery({
+    queryKey: ["helpset"], 
+    queryFn: () => getSingleHelpset(assetID), 
+    enabled: assetType === "helpsets" && assetID > 0
+  });
 
   return (
     <Container>
-      <Toolbar asset={assetVal} />
+      <Toolbar asset={bookQuery.data || helpsetQuery.data || null} />
       {!assetID && <Text>Please select an asset to edit.</Text>}
-      {assetID && <Text>{assetVal && (assetVal.title ? assetVal.title : assetVal.name)}</Text>}
+      {assetType === "books" && bookQuery.data && <Text>{bookQuery.data.title}</Text>}
+      {assetType === "helpsets" && helpsetQuery.data && <Text>{helpsetQuery.data.name}</Text>}
     </Container>
   )
 }
