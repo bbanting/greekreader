@@ -15,7 +15,7 @@ interface BookEditorProps {
 /**The editor component for book objects. */
 export function BookEditor({ id }: BookEditorProps) {
 
-  const [chapterId, setChapterId] = useState<number | null>(null)
+  const [chapterId, setChapterId] = useState<number>(0);
 
   const bookQuery = useQuery({
     queryKey: ["book", id], 
@@ -25,7 +25,8 @@ export function BookEditor({ id }: BookEditorProps) {
 
   const chapterQuery = useQuery({
     queryKey: ["chapter", chapterId],
-    queryFn: () => getSingleChapter(chapterId)
+    queryFn: () => getSingleChapter(chapterId),
+    enabled: !!chapterId
   });
 
   return (
@@ -35,7 +36,7 @@ export function BookEditor({ id }: BookEditorProps) {
       </Toolbar>
 
       <Text>{bookQuery.data?.title}</Text>
-      <Text>Chapter: {chapterId}</Text>
+      <Text>Chapter: {chapterQuery.data?.title}</Text>
     </>
   )
 }

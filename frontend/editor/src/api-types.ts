@@ -19,4 +19,15 @@ export interface HelpSet {
   name: string,
   creator: number
 }
-  
+
+export interface Chapter {
+  id: number,
+  date_created: string,
+  last_modified: string,
+  order: number,
+  ordinal_text: string,
+  title: string,
+  content: string,
+  creator: number,
+  book: number
+}
