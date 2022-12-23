@@ -1,9 +1,10 @@
+import { useState } from "react";
 import { Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 
 import { Book } from "../api-types";
 import { Toolbar } from "./Toolbar";
-import { getSingleBook, getSingleHelpset } from "../api-tools";
+import { getSingleBook, getSingleChapter } from "../api-tools";
 
 
 interface BookEditorProps {
@@ -13,9 +14,18 @@ interface BookEditorProps {
 
 /**The editor component for book objects. */
 export function BookEditor({ id }: BookEditorProps) {
+
+  const [chapterId, setChapterId] = useState<number | null>(null)
+
   const bookQuery = useQuery({
     queryKey: ["book", id], 
-    queryFn: () => getSingleBook(id)
+    queryFn: () => getSingleBook(id),
+    onSuccess: (data) => {if (!chapterId) setChapterId(data.chapters[0])}
+  });
+
+  const chapterQuery = useQuery({
+    queryKey: ["chapter", chapterId],
+    queryFn: () => getSingleChapter(chapterId)
   });
 
   return (
@@ -25,6 +35,7 @@ export function BookEditor({ id }: BookEditorProps) {
       </Toolbar>
 
       <Text>{bookQuery.data?.title}</Text>
+      <Text>Chapter: {chapterId}</Text>
     </>
   )
 }
