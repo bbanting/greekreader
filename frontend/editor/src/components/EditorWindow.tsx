@@ -16,7 +16,7 @@ export function EditorWindow({assetID, assetType}: EditorWindowProps) {
   let editor;
   if (assetID) {
     editor = (assetType === "book") 
-      ? <BookEditor id={assetID} /> 
+      ? <BookEditor bookId={assetID} /> 
       : <HelpsetEditor id={assetID} />
   } else {
     editor = <Text>Please select an asset to edit.</Text>;

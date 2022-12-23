@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { MantineProvider, AppShell, Header, Navbar } from '@mantine/core';
 import { QueryClientProvider, QueryClient  } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { AssetSelector } from './AssetSelector';
 import { EditorWindow } from "./EditorWindow";
@@ -27,6 +28,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
+    <ReactQueryDevtools initialIsOpen={false} />
     <MantineProvider withNormalizeCSS withGlobalStyles>
       <div className="App">
         {appShell}

@@ -8,26 +8,27 @@ import { getSingleBook, getSingleChapter } from "../api-tools";
 
 
 interface BookEditorProps {
-  id: number
+  bookId: number
 }
 
 
 /**The editor component for book objects. */
-export function BookEditor({ id }: BookEditorProps) {
+export function BookEditor({ bookId }: BookEditorProps) {
 
   const [chapterId, setChapterId] = useState<number>(0);
 
   const bookQuery = useQuery({
-    queryKey: ["book", id], 
-    queryFn: () => getSingleBook(id),
-    onSuccess: (data) => {if (!chapterId) setChapterId(data.chapters[0])}
+    queryKey: ["book", bookId], 
+    queryFn: () => getSingleBook(bookId),
+    onSuccess: (data) => setChapterId(data.chapters[0])
   });
 
   const chapterQuery = useQuery({
-    queryKey: ["chapter", chapterId],
+    queryKey: ["chapter", bookId, chapterId],
     queryFn: () => getSingleChapter(chapterId),
     enabled: !!chapterId
   });
+
 
   return (
     <>
@@ -36,7 +37,8 @@ export function BookEditor({ id }: BookEditorProps) {
       </Toolbar>
 
       <Text>{bookQuery.data?.title}</Text>
-      <Text>Chapter: {chapterQuery.data?.title}</Text>
+      <Text>{chapterQuery.data?.title}</Text>
+      <Text>{chapterQuery.data?.content}</Text>
     </>
   )
 }
