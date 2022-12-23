@@ -210,7 +210,7 @@ class Book(models.Model):
     group = models.CharField(max_length=25, blank=True, null=True)
 
     def __str__(self) -> str:
-        return self.name
+        return self.title
 
     class Meta:
         constraints = [
@@ -234,7 +234,7 @@ class Chapter(models.Model):
     content = models.TextField(blank=True, default="")
 
     def __str__(self) -> str:
-        return f"{self.book.name}: {self.ordinal_text} ({self.order})"
+        return f"{self.book.title}: {self.ordinal_text} ({self.order})"
 
     class Meta:
         ordering = ["order", "-date_created"]
