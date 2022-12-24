@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Text } from "@mantine/core";
+import { Text, Select } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 
 import { Book } from "../api-types";
@@ -20,7 +20,7 @@ export function BookEditor({ bookId }: BookEditorProps) {
   const bookQuery = useQuery({
     queryKey: ["book", bookId], 
     queryFn: () => getSingleBook(bookId),
-    onSuccess: (data) => setChapterId(data.chapters[0])
+    onSuccess: (data) => setChapterId(data.chapters[0].id)
   });
 
   const chapterQuery = useQuery({
@@ -41,4 +41,13 @@ export function BookEditor({ bookId }: BookEditorProps) {
       <Text>{chapterQuery.data?.content}</Text>
     </>
   )
+}
+
+
+interface ChapterSelectProps {
+  setChapterId: () => void
+}
+
+function ChapterSelect() {
+
 }

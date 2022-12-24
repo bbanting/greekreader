@@ -1,6 +1,6 @@
 export interface Book {
   id: number,
-  chapters: number[],
+  chapters: Chapter[],
   date_created: string,
   last_modified: string,
   title: string,
