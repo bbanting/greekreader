@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Text, Select } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 
-import { Book } from "../api-types";
+import { Chapter } from "../api-types";
 import { Toolbar } from "./Toolbar";
 import { getSingleBook, getSingleChapter } from "../api-tools";
 
@@ -33,7 +33,12 @@ export function BookEditor({ bookId }: BookEditorProps) {
   return (
     <>
       <Toolbar>
-        <Text sx={{textAlign: "center"}}>Toolbar item placeholder...</Text>
+        {bookQuery.isSuccess && chapterQuery.isSuccess && 
+          <ChapterSelect 
+            chapters={bookQuery.data?.chapters} 
+            currentChapter={chapterQuery.data} 
+            setChapterId={setChapterId} />}
+        
       </Toolbar>
 
       <Text>{bookQuery.data?.title}</Text>
@@ -45,9 +50,20 @@ export function BookEditor({ bookId }: BookEditorProps) {
 
 
 interface ChapterSelectProps {
-  setChapterId: () => void
+  chapters: Chapter[],
+  currentChapter: Chapter,
+  setChapterId: (x: number) => void
 }
 
-function ChapterSelect() {
+function ChapterSelect({chapters, currentChapter, setChapterId}: ChapterSelectProps) {
+  const data = chapters.map((c) => ({value: c.id.toString(), label: `${c.ordinal_text}: ${c.title}`}))
 
+  return (
+    <Select 
+      data={data}
+      onChange = {(v) => setChapterId(Number(v))}
+      dropdownPosition = {"bottom"}
+      value = {currentChapter.id.toString()}
+    />
+  )
 }
