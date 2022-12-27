@@ -7,11 +7,11 @@ from django.core.exceptions import ValidationError
 from accounts.models import Human
 
 
-def not_negative(value:int) -> None:
-    """Check if a number value is negative."""
-    if value < 0:
+def not_lt_one(value:int) -> None:
+    """Check if a number value is less than 1."""
+    if value < 1:
         raise ValidationError(
-            "The number may not be negative", 
+            "The number may not be less than 1.", 
             params={"value": value}
             )
 
@@ -147,7 +147,7 @@ class WordLink(models.Model):
     helpset = models.ForeignKey(HelpSet, models.CASCADE, related_name="words")
     text = models.CharField(max_length=100)
     lexeme = models.ForeignKey(Lexeme, models.CASCADE, related_name="words")
-    order = models.IntegerField(blank=True, default=0, validators=[not_negative])
+    order = models.IntegerField(blank=True, default=1, validators=[not_lt_one])
     # parsings 
 
     def __str__(self) -> str:
@@ -229,7 +229,7 @@ class Chapter(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     book = models.ForeignKey(Book, models.CASCADE, related_name="chapters")
-    order = models.IntegerField(blank=True, default=0, validators=[not_negative])
+    order = models.IntegerField(blank=True, default=1, validators=[not_lt_one])
     ordinal_text = models.CharField(max_length=50)
     title = models.CharField(max_length=100, blank=True, default="")
     content = models.TextField(blank=True, default="")
