@@ -56,14 +56,28 @@ interface ChapterSelectProps {
 }
 
 function ChapterSelect({chapters, currentChapter, setChapterId}: ChapterSelectProps) {
-  const data = chapters.map((c) => ({value: c.id.toString(), label: `${c.ordinal_text}: ${c.title}`}))
+  const data = chapters.map((c) => ({value: c.id.toString(), label: c.ordinal_text}))
 
   return (
-    <Select 
-      data={data}
-      onChange = {(v) => setChapterId(Number(v))}
-      dropdownPosition = {"bottom"}
-      value = {currentChapter.id.toString()}
-    />
+    <div>
+      <Text 
+        display={"inline"} 
+        fz={"sm"} 
+        fw={"bold"} 
+        mr={"xs"}
+      >
+        Ch: 
+      </Text>
+      <Select
+        data={data}
+        onChange={(v) => setChapterId(Number(v))}
+        dropdownPosition="bottom"
+        value={currentChapter.id.toString()}
+        maxDropdownHeight={500}
+        size={"xs"}
+        w={100}
+        display={"inline-block"}
+      />
+    </div>
   )
 }
